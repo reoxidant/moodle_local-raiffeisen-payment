@@ -1,0 +1,47 @@
+#id_summ {
+    padding: 10px
+}
+
+.pay_form, .pay_form .form-group.row {
+    justify-content: center;
+}
+
+/*.pay_form .form-group.row div {
+	width: auto;
+	margin: auto;
+	float: none;
+}*/
+.col-form-label {
+    font-size: 18px;
+}
+
+h3 {
+    margin-top: 20px;
+}
+
+ul {
+    margin-left: 20px;
+}
+
+#pay_container {
+    text-align: center;
+}
+
+.pay_info {
+    display: inline-block;
+    margin: auto;
+    background-color: #eef8fd;
+    border: none;
+    color: #31708f;
+    padding: 5px;
+}
+
+.pay_form .form-group.row .col-md-3, .pay_form .form-group.row .col-md-9 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    justify-content: center;
+}
+
+.mform > .form-group {
+    margin-left: 0 !important;
+}
