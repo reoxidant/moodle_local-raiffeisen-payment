@@ -7,6 +7,7 @@ $string['pluginname'] = 'Оплата обучения';
 $string['summ_error'] = 'Пожалуйста, заполните сумму!';
 $string['pay_summ_text'] = 'Сумма к оплате (руб.)';
 $string['submit_button_text'] = 'Оплатить';
+$string['submit_button_text_raiffeisen'] = 'Оплата через raiffeisen';
 
 $string['sber_user'] = 'Пользователь подключения к Сбербанк';
 $string['sber_pass'] = 'Пароль подключения к Сбербанк';

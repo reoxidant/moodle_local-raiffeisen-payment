@@ -29,6 +29,7 @@ class pay_form extends moodleform
         $select -> setSelected('type1');
 
         $this -> add_action_buttons(false, get_string('submit_button_text', 'local_student_pay')); // false - без cancel
+        $this -> add_action_buttons(false, get_string('submit_button_text_raiffeisen', 'local_student_pay')); // false - без cancel
     }
 
     public function validation($data, $files)
