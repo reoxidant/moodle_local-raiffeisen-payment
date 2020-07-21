@@ -1,7 +1,7 @@
 const ready = () => {
     const pay_form = document.querySelector('.pay_form > form');
 
-    pay_form.addEventListener('submit', function(e) {
+    pay_form.addEventListener('submit', function (e) {
         e.preventDefault();
 
         //const payment = new PaymentPageSdk('000001780357001-80357001'); //publicId
@@ -10,19 +10,19 @@ const ready = () => {
         const amount = 100;
         const orderId = 1;
 
-        require(['core/notification'], function( Notification) {
+        require(['core/notification'], function (Notification) {
             payment.openPopup({
                 orderId: orderId,
                 amount: amount
-            }).then(function() {
+            }).then(function () {
                 // noinspection JSCheckFunctionSignatures
                 Notification.addNotification({
                     message: "Оплата совершена успешно!",
                     type: "success"
                 });
-            }).catch(function() {
+            }).catch(function () {
                 Notification.addNotification({
-                    message:"Оплата не совершена, попробуйте еще раз!" ,
+                    message: "Оплата не совершена, попробуйте еще раз!",
                     type: "error"
                 });
             });

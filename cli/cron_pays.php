@@ -117,8 +117,8 @@ try {
                             $res = $Sclient -> put($params);
                             if (isset($res -> return) && $res -> return == 'true') {
                                 student_pay ::updateOrderStatus($id, $STATUS_TYPES['sended1c']);
-                            } elseif (is_soap_fault($res)) {
-                                $error = "Ошибка SOAP: (faultcode: {$res->faultcode}, faultstring: {$res->faultstring})";
+                            } elseif (is_soap_fault($res)){
+                            $error = "Ошибка SOAP: (faultcode: {$res->faultcode}, faultstring: {$res->faultstring})";
                                 report_error($error);
                             } elseif (isset($res -> return)) {
                                 $error = $res -> return;

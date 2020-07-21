@@ -24,7 +24,7 @@ $PAGE -> set_heading($title);
 $PAGE -> set_title($title);
 $PAGE -> set_cacheable(false);
 $PAGE -> requires -> css('/local/student_pay/styles.css');
-$PAGE -> requires -> css( new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.css'));
+$PAGE -> requires -> css(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.css'));
 
 $mform = new pay_form;
 
@@ -85,7 +85,7 @@ require("faq.php");
 
 $PAGE -> requires -> js('/local/student_pay/js/main.js');
 //test
-$PAGE->requires->js( new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.js'));
+$PAGE -> requires -> js(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.js'));
 //e-commerce url https://e-commerce.raiffeisen.ru/pay/
 $PAGE -> requires -> js('/local/student_pay/js/raiffeisen_api.js');
 
