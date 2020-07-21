@@ -1,6 +1,5 @@
 <?php
 require_once('../../config.php');
-require_once('lib/check_status_pay.php');
 
 if (!isloggedin() or isguestuser()) {
     require_login();

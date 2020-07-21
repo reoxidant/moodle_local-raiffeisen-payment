@@ -60,4 +60,8 @@ $string['life_pay_login'] = 'LifePay login';
 $string['life_pay_cashier_name'] = 'Имя кассира';
 $string['life_pay_cashier_name_default'] = 'Кассир';
 $string['life_pay_target_serial'] = 'Серийный номер принтера';
-$string['life_pay_product_name'] = 'Наименование товарной позиции'; // по умолчанию $string['goods_name'] 
+$string['life_pay_product_name'] = 'Наименование товарной позиции'; // по умолчанию $string['goods_name']
+
+//Raiffeisen
+$string['rai_pay_success'] = "Оплата совершена успешно!";
+$string['rai_pay_error'] = "Оплата не совершена, попробуйте еще раз!";
