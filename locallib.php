@@ -208,9 +208,14 @@ class student_pay
         return file_get_contents($url, false, $context);
     }
 
-    public static function do_pay($summ, $goods_type, $pay_type)
+    public static function do_pay($summ, $goods_type)
     {
         global $USER, $CFG, $STATUS_TYPES;
+
+        /*echo '<pre>';
+        print_r($pay_type);
+        echo '</pre>';
+        die('Дебаг');*/
 
         if (!preg_match('/^\d+$/', $USER -> username))
             return "username not int";
@@ -219,11 +224,6 @@ class student_pay
             $summ = str_replace(' ', '', $summ);
         else
             return "summ empty";
-
-        echo '<pre>';
-        print_r($pay_type);
-        echo '</pre>';
-        die();
 
         // создаём новую запись
         $new_order = self ::createNewOrder($summ, $goods_type);
@@ -234,7 +234,7 @@ class student_pay
 
         $config = self ::$config;
 
-        /*// корзина
+        // корзина
         $quantity = new StdClass;
         $quantity -> value = 1;
         $quantity -> measure = get_string('sber_measure', 'local_student_pay');
@@ -302,7 +302,7 @@ class student_pay
 
         // перенаправляем на оплату и останавливаем дальнейшую работу
         redirect($result_obj -> formUrl);
-        die;*/
+        die;
     }
 
     // отправка записи в кассовый аппарат
@@ -398,32 +398,6 @@ class student_pay
         }
 
         return true;
-    }
-}
-
-class student_pay_raiffeisen extends student_pay
-{
-    public static function do_pay($summ, $goods_type)
-    {
-        global $USER, $CFG, $STATUS_TYPES;
-
-        if (!preg_match('/^\d+$/', $USER -> username))
-            return "username not int";
-
-        if (!empty($summ))
-            $summ = str_replace(' ', '', $summ);
-        else
-            return "summ empty";
-
-        // создаём новую запись
-        $new_order = self ::createNewOrder($summ, $goods_type);
-        if (!$ORDER_ID = $new_order['orderid'])
-            return "new order create DB error";
-
-        $summ = $summ * 100; // сумма в копейках
-
-        $config = self ::$config;
-
     }
 }
 
