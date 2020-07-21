@@ -65,3 +65,5 @@ $string['life_pay_product_name'] = 'Наименование товарной п
 //Raiffeisen
 $string['rai_pay_success'] = "Оплата совершена успешно!";
 $string['rai_pay_error'] = "Оплата не совершена, попробуйте еще раз!";
+$string['pay_type_rai'] = "Оплатить через Райффайзенбанк";
+$string['pay_type_sber'] = "Оплатить через Сбербанк";

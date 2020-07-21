@@ -30,7 +30,7 @@ $mform = new pay_form;
 
 $pay_result = null;
 if ($fromform = $mform -> get_data())
-    $pay_result = student_pay ::do_pay($fromform -> summ, $fromform -> goods_type); // если что-то вернул, значит ошибка
+    $pay_result = student_pay ::do_pay($fromform -> summ, $fromform -> goods_type, $fromform -> pay_type); // если что-то вернул, значит ошибка
 
 $event = \local_student_pay\event\student_pay_viewed ::create(array(
     'objectid' => null,

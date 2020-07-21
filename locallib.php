@@ -28,8 +28,16 @@ class pay_form extends moodleform
         // This will select the colour blue.
         $select -> setSelected('type1');
 
+        $options_pay = array(
+            'type1' => get_string('pay_type_sber', 'local_student_pay'),
+            'type2' => get_string('pay_type_rai', 'local_student_pay')
+        );
+
+        $select_pay = $mform -> addElement('select', 'pay_type', '', $options_pay);
+
+        $select_pay -> setSelected('type1');
+
         $this -> add_action_buttons(false, get_string('submit_button_text', 'local_student_pay')); // false - без cancel
-        $this -> add_action_buttons(false, get_string('submit_button_text_raiffeisen', 'local_student_pay')); // false - без cancel
     }
 
     public function validation($data, $files)
@@ -200,7 +208,7 @@ class student_pay
         return file_get_contents($url, false, $context);
     }
 
-    public static function do_pay($summ, $goods_type)
+    public static function do_pay($summ, $goods_type, $pay_type)
     {
         global $USER, $CFG, $STATUS_TYPES;
 
@@ -212,6 +220,11 @@ class student_pay
         else
             return "summ empty";
 
+        echo '<pre>';
+        print_r($pay_type);
+        echo '</pre>';
+        die();
+
         // создаём новую запись
         $new_order = self ::createNewOrder($summ, $goods_type);
         if (!$ORDER_ID = $new_order['orderid'])
@@ -221,7 +234,7 @@ class student_pay
 
         $config = self ::$config;
 
-        // корзина
+        /*// корзина
         $quantity = new StdClass;
         $quantity -> value = 1;
         $quantity -> measure = get_string('sber_measure', 'local_student_pay');
@@ -289,7 +302,7 @@ class student_pay
 
         // перенаправляем на оплату и останавливаем дальнейшую работу
         redirect($result_obj -> formUrl);
-        die;
+        die;*/
     }
 
     // отправка записи в кассовый аппарат
@@ -385,6 +398,32 @@ class student_pay
         }
 
         return true;
+    }
+}
+
+class student_pay_raiffeisen extends student_pay
+{
+    public static function do_pay($summ, $goods_type)
+    {
+        global $USER, $CFG, $STATUS_TYPES;
+
+        if (!preg_match('/^\d+$/', $USER -> username))
+            return "username not int";
+
+        if (!empty($summ))
+            $summ = str_replace(' ', '', $summ);
+        else
+            return "summ empty";
+
+        // создаём новую запись
+        $new_order = self ::createNewOrder($summ, $goods_type);
+        if (!$ORDER_ID = $new_order['orderid'])
+            return "new order create DB error";
+
+        $summ = $summ * 100; // сумма в копейках
+
+        $config = self ::$config;
+
     }
 }
 
