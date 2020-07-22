@@ -77,6 +77,7 @@ class Subsystem
      */
     public static function updateStatusToDB($id, $status): void
     {
+        //TODO type status is null need to fix
         if ($status === "SUCCESS") {
             student_pay ::updateOrderStatus($id, Subsystem ::$status_arr['paid']);
         } else if ($status === "NOT_FOUND") {
@@ -155,7 +156,7 @@ class BankSystem
         $result = json_decode(curl_exec($ch));
 
         if (!$this -> handlerErrors($ch)) {
-            $status = toString($result -> transaction -> status -> value);
+            $status = (string)($result -> transaction -> status -> value);
             Subsystem ::updateStatusToDB($orderId, $status);
         }
     }
