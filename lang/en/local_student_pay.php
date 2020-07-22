@@ -7,6 +7,7 @@ $string['pluginname'] = 'Оплата обучения';
 $string['summ_error'] = 'Пожалуйста, заполните сумму!';
 $string['pay_summ_text'] = 'Сумма к оплате (руб.)';
 $string['submit_button_text'] = 'Оплатить';
+$string['submit_button_text_raiffeisen'] = 'Оплата через raiffeisen';
 
 $string['sber_user'] = 'Пользователь подключения к Сбербанк';
 $string['sber_pass'] = 'Пароль подключения к Сбербанк';
@@ -59,4 +60,10 @@ $string['life_pay_login'] = 'LifePay login';
 $string['life_pay_cashier_name'] = 'Имя кассира';
 $string['life_pay_cashier_name_default'] = 'Кассир';
 $string['life_pay_target_serial'] = 'Серийный номер принтера';
-$string['life_pay_product_name'] = 'Наименование товарной позиции'; // по умолчанию $string['goods_name'] 
+$string['life_pay_product_name'] = 'Наименование товарной позиции'; // по умолчанию $string['goods_name']
+
+//Raiffeisen
+$string['rai_pay_success'] = "Оплата совершена успешно!";
+$string['rai_pay_error'] = "Оплата не совершена, попробуйте еще раз!";
+$string['pay_type_rai'] = "Оплатить через Райффайзенбанк";
+$string['pay_type_sber'] = "Оплатить через Сбербанк";

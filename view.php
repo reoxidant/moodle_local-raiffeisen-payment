@@ -24,12 +24,13 @@ $PAGE -> set_heading($title);
 $PAGE -> set_title($title);
 $PAGE -> set_cacheable(false);
 $PAGE -> requires -> css('/local/student_pay/styles.css');
+$PAGE -> requires -> css(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.css'));
 
 $mform = new pay_form;
 
 $pay_result = null;
 if ($fromform = $mform -> get_data())
-    $pay_result = student_pay ::do_pay($fromform -> summ, $fromform -> goods_type); // если что-то вернул, значит ошибка
+    $pay_result = student_pay ::do_pay($fromform -> summ, $fromform -> goods_type, $fromform -> pay_type); // если что-то вернул, значит ошибка
 
 $event = \local_student_pay\event\student_pay_viewed ::create(array(
     'objectid' => null,
@@ -83,6 +84,10 @@ html_writer ::end_tag('div');
 require("faq.php");
 
 $PAGE -> requires -> js('/local/student_pay/js/main.js');
+//test
+$PAGE -> requires -> js(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.js'));
+//e-commerce url https://e-commerce.raiffeisen.ru/pay/
+$PAGE -> requires -> js('/local/student_pay/js/raiffeisen_api.js');
 
 echo $OUTPUT -> footer();
 
