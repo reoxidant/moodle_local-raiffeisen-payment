@@ -10,7 +10,6 @@ class raiffeisen
     private function recordNewPay($summ, $goods_type): void
     {
         global $DB;
-
         try {
             $sqlObjParam = $this -> createRecordStdClass($summ, $goods_type);
             $DB -> insert_record('student_pays', $sqlObjParam);
@@ -33,25 +32,26 @@ class raiffeisen
 
     private function validateFormData($summ, $goods_type, $pay_type): bool
     {
-        if ($this -> validateNumber($summ) && $this -> validateGoodType($goods_type) && $this -> validatePayType($pay_type))
+        if ($this -> validateNumber($summ) && $this -> validateGoodType($goods_type) && $this -> validatePayType($pay_type)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     private function validateNumber($num): bool
     {
-        return preg_match('/\d++/m', $num);
+        return preg_match('/\d++/s', $num);
     }
 
     private function validateGoodType($str): bool
     {
-        return preg_match('/\^type\d{1,2}$/g', $str);
+        return preg_match('/^type[1-2]$/s', $str);
     }
 
     private function validatePayType($str): bool
     {
-        return preg_match('/^type\d{1,2}$/g', $str);
+        return preg_match('/^type[1-2]$/s', $str);
     }
 
     public function createPay($summ, $goods_type, $pay_type): void

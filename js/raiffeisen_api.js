@@ -1,5 +1,5 @@
 const ready = () => {
-    const pay_form = document.querySelector('.pay_form > form');
+    const pay_form = document.querySelector('.mform');
     const selector = document.querySelector('#id_pay_type');
 
     pay_form.addEventListener('submit', function (e) {
@@ -16,17 +16,19 @@ const ready = () => {
                     orderId: orderId,
                     amount: amount
                 }).then(function () {
+                    let formData = new FormData(pay_form);
                     Notification.addNotification({
                         message: "Оплата совершена успешно!",
                         type: "success"
                     });
-                    xhrSender(new FormData(pay_form));
+                    xhrSender(formData);
                 }).catch(function () {
+                    let formData = new FormData(pay_form);
                     Notification.addNotification({
                         message: "Оплата не совершена, попробуйте еще раз!",
                         type: "error"
                     });
-                    xhrSender(new FormData(pay_form));
+                    xhrSender(formData);
                 });
             });
         }
@@ -39,7 +41,7 @@ const xhrSender = (form_data) => {
     xhr.send(form_data);
     if (xhr.status !== 200) {
         // обработать ошибку
-        console.log(xhr.status + ': ' + xhr.statusText);
+        console.log("Error " + xhr.status + ': ' + xhr.statusText);
     }
 }
 
