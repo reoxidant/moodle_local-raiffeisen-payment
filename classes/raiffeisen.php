@@ -17,7 +17,7 @@ class raiffeisen
         }
     }
 
-    private function createRecordStdClass($summ, $goods_type, $status = 0)
+    private function createRecordStdClass($summ, $goods_type, $status = 1)
     {
         global $USER;
         $record = new stdClass();

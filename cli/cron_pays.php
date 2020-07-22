@@ -2,6 +2,7 @@
 //define('CLI_SCRIPT', true);
 require(__DIR__ . '/../../../config.php');
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
+require_once($CFG -> dirroot . "/local/student_pay/cli/cron_raiffeisen.php");
 $err_file = '/var/log/php/stud_pays.log';
 $config_data = get_config('local_student_pay');
 $ws_timeout = (int)$config_data -> ws_timeout;
@@ -11,7 +12,6 @@ ini_set("default_socket_timeout", $ws_timeout);
 try {
     $status_arr = array($STATUS_TYPES['new'], $STATUS_TYPES['paid']);
     $results = student_pay ::getOrdersByStatus($status_arr);
-    var_dump($results);
 
     if (count($results)) {
         $WS_params = array('login' => $config_data -> ws_user, 'password' => $config_data -> ws_pass, 'connection_timeout' => $ws_timeout);
@@ -144,11 +144,8 @@ try {
     report_error($error);
 }
 try {
-    $status_arr = array($STATUS_TYPES['new'], $STATUS_TYPES['paid']);
-    $results = student_pay ::getOrdersByStatus($status_arr);
-    if (count($results)) {
-
-    }
+    $raiffeisenFacade = new cron_raiffeisen();
+    $raiffeisenFacade -> checkStatusOperations();
 } catch (Exception $e) {
     $error = $e -> getMessage();
     report_error($error);
