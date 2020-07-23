@@ -22,7 +22,7 @@ use student_pay;
 class raiffeisen
 {
     /**
-     * @var
+     * @var null
      */
     private static $instance = null;
 
