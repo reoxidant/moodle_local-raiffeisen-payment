@@ -139,7 +139,7 @@ class student_pay
     {
         global $USER, $DB;
 
-        $new_status_id = ($status_id)? $status_id : self ::$config -> status_new;
+        $new_status_id = ($status_id) ? $status_id : self ::$config -> status_new;
 
         $timenow = time();
 

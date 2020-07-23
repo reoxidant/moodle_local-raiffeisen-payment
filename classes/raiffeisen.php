@@ -65,9 +65,9 @@ class raiffeisen
      */
     private function recordNewPay($summ, $goods_type): void
     {
-        student_pay::createNewOrder($summ, $goods_type, 1, 'raiff');
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff');
     }
-    
+
     /**
      * @param $summ
      * @param $goods_type
