@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpIncludeInspection */
 
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
 
@@ -52,7 +52,7 @@ class Subsystem
     /**
      * @var array
      */
-    public static $status_arr;
+    public $status_arr;
 
     /**
      * @var array
@@ -77,11 +77,10 @@ class Subsystem
      */
     public static function updateStatusToDB($id, $status): void
     {
-        //TODO type status is null need to fix
         if ($status === "SUCCESS") {
-            student_pay ::updateOrderStatus($id, Subsystem ::$status_arr['paid']);
+            student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['paid']);
         } else if ($status === "NOT_FOUND") {
-            student_pay ::updateOrderStatus($id, Subsystem ::$status_arr['error']);
+            student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['error']);
         }
     }
 }
@@ -107,6 +106,8 @@ class BankSystem
      * @param $val_pay
      * @param $id
      * @param $user
+     * @return bool
+     * @return bool
      */
     private function validateFields($val_pay, $id, $user): bool
     {
@@ -155,10 +156,26 @@ class BankSystem
 
         $result = json_decode(curl_exec($ch));
 
-        if (!$this -> handlerErrors($ch)) {
+        $errors = $this -> handlerErrors($ch);
+
+        if ($errors ?? null) {
             $status = (string)($result -> transaction -> status -> value);
             Subsystem ::updateStatusToDB($orderId, $status);
+        } else {
+            $this -> recordErrorsDB($orderId, $errors);
         }
+    }
+
+    /**
+     * @param $id
+     * @param $msg
+     */
+    private function recordErrorsDB($id, $msg)
+    {
+        $error = new stdClass;
+        $error -> id = $id;
+        $error -> error = $msg;
+        student_pay ::updateOrder($error);
     }
 
     /**
@@ -166,10 +183,10 @@ class BankSystem
      * @param null $error
      * @return string|null
      */
-    private function handlerErrors($ch, $error = ''): string
+    private function handlerErrors($ch, $error = null): string
     {
         if (curl_errno($ch)) {
-            $error = 'Error:' . curl_error($ch);
+            $error = curl_errno($ch) . " - " . curl_error($ch);
         }
         curl_close($ch);
         return $error;
