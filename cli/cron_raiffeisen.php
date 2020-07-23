@@ -169,7 +169,7 @@ class BankSystem
 
         $errors = $this -> handlerErrors($ch);
 
-        if ($errors ?? null) {
+        if ($errors === null) {
             $status = (string)($result -> transaction -> status -> value);
             Subsystem ::updateStatusToDB($orderId, $status);
         } else {
@@ -194,7 +194,7 @@ class BankSystem
      * @param null $error
      * @return string|null
      */
-    private function handlerErrors($ch, $error = null): string
+    private function handlerErrors($ch, $error = null): ?string
     {
         if (curl_errno($ch)) {
             $error = curl_errno($ch) . " - " . curl_error($ch);

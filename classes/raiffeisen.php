@@ -10,6 +10,8 @@
 
 namespace classes;
 
+require_once('../locallib.php');
+
 use Exception;
 use student_pay;
 
@@ -22,7 +24,7 @@ class raiffeisen
     /**
      * @var
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * raiffeisen constructor.
@@ -53,7 +55,7 @@ class raiffeisen
      */
     public static function getInstance(): raiffeisen
     {
-        if (self ::$instance ?? null) {
+        if (self ::$instance === null) {
             self ::$instance = new self();
         }
         return self ::$instance;
