@@ -10,8 +10,8 @@
 
 namespace classes;
 
-use dml_exception;
-use stdClass;
+use Exception;
+use student_pay;
 
 /**
  * Class raiffeisen
@@ -33,19 +33,19 @@ class raiffeisen
 
     /**
      * null don't use
-     * @throws \Exception
+     * @throws Exception
      */
     protected function __clone()
     {
-        throw new \Exception("Cannot clone a singleton.");
+        throw new Exception("Cannot clone a singleton.");
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function __wakeup()
     {
-        throw new \Exception("Cannot unserialize a singleton.");
+        throw new Exception("Cannot unserialize a singleton.");
     }
 
     /**
@@ -65,33 +65,9 @@ class raiffeisen
      */
     private function recordNewPay($summ, $goods_type): void
     {
-        global $DB;
-        try {
-            $sqlObjParam = $this -> createRecordStdClass($summ, $goods_type);
-            $DB -> insert_record('student_pays', $sqlObjParam);
-        } catch (dml_exception $e) {
-        }
+        student_pay::createNewOrder($summ, $goods_type, 1, 'raiff');
     }
-
-    /**
-     * @param $summ
-     * @param $goods_type
-     * @param int $status
-     * @return stdClass
-     */
-    private function createRecordStdClass($summ, $goods_type, $status = 1)
-    {
-        global $USER;
-        $record = new stdClass();
-        $record -> userid = $USER -> id;
-        $record -> timecreate = time();
-        $record -> timemodified = time();
-        $record -> amount = $summ;
-        $record -> goods_type = $goods_type;
-        $record -> status = $status;
-        return $record;
-    }
-
+    
     /**
      * @param $summ
      * @param $goods_type

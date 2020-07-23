@@ -52,7 +52,6 @@ const xhrSender = (form_data) => {
     xhr.open('POST', '/local/student_pay/lib/raiffeisen_record.php', true);
     xhr.send(form_data);
     if (xhr.status !== 200) {
-        // обработать ошибку
         console.log("Error " + xhr.status + ': ' + xhr.statusText);
     }
 }
