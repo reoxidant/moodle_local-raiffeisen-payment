@@ -32,12 +32,10 @@ const ready = () => {
                     });
                     xhrSender(formData);
                 }).catch(function () {
-                    let formData = new FormData(pay_form);
                     Notification.addNotification({
                         message: "Оплата не совершена, попробуйте еще раз!",
                         type: "error"
                     });
-                    xhrSender(formData);
                 });
             });
         }
