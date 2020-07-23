@@ -14,18 +14,15 @@ const ready = () => {
     pay_form.addEventListener('submit', function (e) {
         if (selector.options[selector.selectedIndex].value === 'type2') {
             e.preventDefault();
-            //const payment = new PaymentPageSdk('000001780357001-80357001'); //publicId
             // noinspection JSUnresolvedFunction
-            const payment = new PaymentPageSdk('000001780049001-80049001');
+            const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
 
             const amount = document.querySelector('#id_summ').value;
-            const orderId = 1;
 
             // noinspection JSValidateTypes
             require(['core/notification'], function (Notification) {
                 // noinspection JSUnresolvedFunction
                 payment.openPopup({
-                    orderId: orderId,
                     amount: amount
                 }).then(function () {
                     let formData = new FormData(pay_form);
