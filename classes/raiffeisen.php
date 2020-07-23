@@ -1,4 +1,12 @@
 <?php
+/**
+ * Insert form data to db
+ * @author vshapovalov
+ * @date 23/7/2020
+ * @copyright 2020 Moscow Witte University. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package moodle
+ */
 
 namespace classes;
 
@@ -11,6 +19,45 @@ use stdClass;
  */
 class raiffeisen
 {
+    /**
+     * @var
+     */
+    private static $instance;
+
+    /**
+     * raiffeisen constructor.
+     */
+    protected function __construct()
+    {
+    }
+
+    /**
+     * null don't use
+     * @throws \Exception
+     */
+    protected function __clone()
+    {
+        throw new \Exception("Cannot clone a singleton.");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function __wakeup()
+    {
+        throw new \Exception("Cannot unserialize a singleton.");
+    }
+
+    /**
+     * @return raiffeisen
+     */
+    public static function getInstance(): raiffeisen
+    {
+        if (self ::$instance ?? null) {
+            self ::$instance = new self();
+        }
+        return self ::$instance;
+    }
 
     /**
      * @param $summ

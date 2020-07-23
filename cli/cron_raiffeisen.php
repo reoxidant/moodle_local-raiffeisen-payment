@@ -1,4 +1,15 @@
-<?php /** @noinspection PhpIncludeInspection */
+<?php
+
+/**
+ * Handler status for record results to db
+ * @author vshapovalov
+ * @date 23/7/2020
+ * @copyright 2020 Moscow Witte University. All rights reserved
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package moodle
+ */
+
+/** @noinspection PhpIncludeInspection */
 
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
 

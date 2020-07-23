@@ -1,3 +1,12 @@
+/*
+ * JS Library of Raiffeisen Bank
+ * @author vshapovalov
+ * @date 23/7/2020
+ * @copyright 2020 Moscow Witte University. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package moodle
+ */
+
 const ready = () => {
     const pay_form = document.querySelector('.mform');
     const selector = document.querySelector('#id_pay_type');
