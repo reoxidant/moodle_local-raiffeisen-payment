@@ -14,6 +14,13 @@ const ready = () => {
     pay_form.addEventListener('submit', function (e) {
         if (selector.options[selector.selectedIndex].value === 'type2') {
             e.preventDefault();
+
+            const orderId = getOrderId('new');
+
+            if (typeof orderId !== "number" && !orderId) {
+                throw new Error("Ошибка выполнения запроса!");
+            }
+
             // noinspection JSUnresolvedFunction
             const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
 
@@ -41,6 +48,26 @@ const ready = () => {
         }
     });
 };
+
+const getOrderId = (keyName) => {
+    if (keyName !== null) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/local/student_pay/lib/raiffeisen_order.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('key=' + keyName);
+
+        // responseType должно быть пустой строкой, либо "text"
+        xhr.responseType = 'text';
+
+        xhr.onload = function () {
+            if (xhr.readyState === xhr.DONE) {
+                if (xhr.status === 200) {
+                    return xhr.response;
+                }
+            }
+        }
+    }
+}
 
 const xhrSender = (form_data) => {
     const xhr = new XMLHttpRequest();

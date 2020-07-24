@@ -10,6 +10,7 @@
 
 namespace classes;
 
+defined('MOODLE_INTERNAL') || die;
 require_once('../locallib.php');
 
 use Exception;
