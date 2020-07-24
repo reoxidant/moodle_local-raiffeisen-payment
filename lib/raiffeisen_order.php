@@ -8,7 +8,7 @@
  * @package moodle
  */
 
-//defined('MOODLE_INTERNAL') || die();
+require_once('../../../config.php');
 
 class raiffeisen_order
 {
@@ -28,13 +28,13 @@ class raiffeisen_order
 
     public function getOrderId(): int
     {
-        return $this -> databaseResult();
+        return intval($this -> databaseResult() -> max);
     }
 
     private function databaseResult()
     {
         global $DB;
-        return $DB -> get_record_sql("SELECT MAX(id) FROM {student_pays}");
+        return $DB -> get_record_sql("SELECT MAX(Id) FROM {student_pays}");
     }
 
 }
@@ -42,7 +42,7 @@ class raiffeisen_order
 if ($_POST['key'] ?? null) {
     if ($_POST['key'] === 'new') {
         $order = raiffeisen_order ::getInstance();
-        return $order -> getOrderId();
+        echo $order -> getOrderId();
     } else {
         throw new \moodle_exception('Ошибка при получении параметра: orderId');
     }

@@ -15,7 +15,9 @@ const ready = () => {
         if (selector.options[selector.selectedIndex].value === 'type2') {
             e.preventDefault();
 
-            const orderId = getOrderId('new');
+            var orderId = getOrderId('new');
+            console.log(getOrderId('new'));
+            console.log(orderId);
 
             if (typeof orderId !== "number" && !orderId) {
                 throw new Error("Ошибка выполнения запроса!");
@@ -30,6 +32,7 @@ const ready = () => {
             require(['core/notification'], function (Notification) {
                 // noinspection JSUnresolvedFunction
                 payment.openPopup({
+                    orderId: orderId,
                     amount: amount
                 }).then(function () {
                     let formData = new FormData(pay_form);
@@ -50,6 +53,9 @@ const ready = () => {
 };
 
 const getOrderId = (keyName) => {
+
+    var id = 12;
+
     if (keyName !== null) {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/local/student_pay/lib/raiffeisen_order.php', true);
@@ -59,14 +65,19 @@ const getOrderId = (keyName) => {
         // responseType должно быть пустой строкой, либо "text"
         xhr.responseType = 'text';
 
-        xhr.onload = function () {
+        console.log(id, 'if');
+        //TODO: fix problem with context
+        xhr.onload = () => {
             if (xhr.readyState === xhr.DONE) {
                 if (xhr.status === 200) {
-                    return xhr.response;
+                    id = xhr.response;
                 }
             }
-        }
+        };
+        console.log(id, 'res');
     }
+
+    console.log(id, 'id');
 }
 
 const xhrSender = (form_data) => {
