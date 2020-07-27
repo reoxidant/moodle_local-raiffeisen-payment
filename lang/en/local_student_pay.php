@@ -1,4 +1,13 @@
 <?php
+/**
+ * Describes language strings
+ * @author vshapovalov
+ * @date 23/7/2020
+ * @copyright 2020 Moscow Witte University. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package moodle
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 $string['student_pay:viewandpay'] = 'Видеть страницу оплаты и производить оплату';
