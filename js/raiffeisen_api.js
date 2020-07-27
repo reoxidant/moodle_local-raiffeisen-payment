@@ -17,10 +17,10 @@ const ready = () => {
 
             getOrderId('new').then((orderId) => {
 
-                console.log('result orderId is:' + orderId);
-
                 if (typeof orderId !== "number" || !orderId) {
                     throw new Error("Ошибка выполнения запроса!");
+                } else {
+                    orderId++;
                 }
 
                 // noinspection JSUnresolvedFunction
@@ -44,10 +44,6 @@ const ready = () => {
                             throw error;
                         })
                     }).catch(function () {
-                        let formData = new FormData(pay_form);
-                        promiseSender(formData).catch(error => {
-                            throw error;
-                        })
                         Notification.addNotification({
                             message: "Оплата не совершена, попробуйте еще раз!",
                             type: "error"
