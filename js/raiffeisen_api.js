@@ -15,36 +15,37 @@ const ready = () => {
         if (selector.options[selector.selectedIndex].value === 'type2') {
             e.preventDefault();
 
-            var orderId = getOrderId('new');
-            console.log(getOrderId('new'));
-            console.log(orderId);
+            getOrderId('new').then((orderId) => {
 
-            if (typeof orderId !== "number" && !orderId) {
-                throw new Error("Ошибка выполнения запроса!");
-            }
+                console.log('result orderId is:' + orderId);
 
-            // noinspection JSUnresolvedFunction
-            const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
+                if (typeof orderId !== "number" || !orderId) {
+                    throw new Error("Ошибка выполнения запроса!");
+                }
 
-            const amount = document.querySelector('#id_summ').value;
-
-            // noinspection JSValidateTypes
-            require(['core/notification'], function (Notification) {
                 // noinspection JSUnresolvedFunction
-                payment.openPopup({
-                    orderId: orderId,
-                    amount: amount
-                }).then(function () {
-                    let formData = new FormData(pay_form);
-                    Notification.addNotification({
-                        message: "Оплата совершена успешно!",
-                        type: "success"
-                    });
-                    xhrSender(formData);
-                }).catch(function () {
-                    Notification.addNotification({
-                        message: "Оплата не совершена, попробуйте еще раз!",
-                        type: "error"
+                const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
+
+                const amount = document.querySelector('#id_summ').value;
+
+                // noinspection JSValidateTypes
+                require(['core/notification'], function (Notification) {
+                    // noinspection JSUnresolvedFunction
+                    payment.openPopup({
+                        orderId: orderId,
+                        amount: amount
+                    }).then(function () {
+                        let formData = new FormData(pay_form);
+                        Notification.addNotification({
+                            message: "Оплата совершена успешно!",
+                            type: "success"
+                        });
+                        xhrSender(formData);
+                    }).catch(function () {
+                        Notification.addNotification({
+                            message: "Оплата не совершена, попробуйте еще раз!",
+                            type: "error"
+                        });
                     });
                 });
             });
@@ -53,31 +54,23 @@ const ready = () => {
 };
 
 const getOrderId = (keyName) => {
+    if (keyName !== null && keyName === "new") {
+        const requestParam = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+            body: 'key=' + keyName
+        }
 
-    var id = 12;
-
-    if (keyName !== null) {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/local/student_pay/lib/raiffeisen_order.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('key=' + keyName);
-
-        // responseType должно быть пустой строкой, либо "text"
-        xhr.responseType = 'text';
-
-        console.log(id, 'if');
-        //TODO: fix problem with context
-        xhr.onload = () => {
-            if (xhr.readyState === xhr.DONE) {
-                if (xhr.status === 200) {
-                    id = xhr.response;
-                }
-            }
-        };
-        console.log(id, 'res');
+        return fetch('/local/student_pay/lib/raiffeisen_order.php', requestParam)
+            .then((response) => response.text())
+            .then((responseData) => {
+                return parseInt(responseData, 10);
+            }).catch((error) => {
+                throw error;
+            })
     }
-
-    console.log(id, 'id');
 }
 
 const xhrSender = (form_data) => {
