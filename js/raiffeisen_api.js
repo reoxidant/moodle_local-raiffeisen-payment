@@ -40,8 +40,14 @@ const ready = () => {
                             message: "Оплата совершена успешно!",
                             type: "success"
                         });
-                        xhrSender(formData);
+                        promiseSender(formData).catch(error => {
+                            throw error;
+                        })
                     }).catch(function () {
+                        let formData = new FormData(pay_form);
+                        promiseSender(formData).catch(error => {
+                            throw error;
+                        })
                         Notification.addNotification({
                             message: "Оплата не совершена, попробуйте еще раз!",
                             type: "error"
@@ -53,7 +59,7 @@ const ready = () => {
     });
 };
 
-const getOrderId = (keyName) => {
+const getOrderId = async (keyName) => {
     if (keyName !== null && keyName === "new") {
         const requestParam = {
             method: 'POST',
@@ -63,7 +69,7 @@ const getOrderId = (keyName) => {
             body: 'key=' + keyName
         }
 
-        return fetch('/local/student_pay/lib/raiffeisen_order.php', requestParam)
+        return await fetch('/local/student_pay/lib/raiffeisen_order.php', requestParam)
             .then((response) => response.text())
             .then((responseData) => {
                 return parseInt(responseData, 10);
@@ -73,13 +79,14 @@ const getOrderId = (keyName) => {
     }
 }
 
-const xhrSender = (form_data) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/local/student_pay/lib/raiffeisen_record.php', true);
-    xhr.send(form_data);
-    if (xhr.status !== 200) {
-        console.log("Error " + xhr.status + ': ' + xhr.statusText);
+const promiseSender = async (form_data) => {
+
+    const requestParam = {
+        method: 'POST',
+        body: form_data
     }
+
+    await fetch('/local/student_pay/lib/raiffeisen_record.php', requestParam);
 }
 
 document.addEventListener("DOMContentLoaded", ready);
