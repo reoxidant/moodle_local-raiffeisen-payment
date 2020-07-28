@@ -124,7 +124,8 @@ class BankSystem
     private function validateFields($val_pay, $id, $user): bool
     {
         if (($id && $val_pay -> amount && $val_pay -> external_order_id) ?? null) {
-            return ($user -> username ?? null && $val_pay -> status == Subsystem ::$status_arr['new']);
+            if ($user -> username ?? null && $val_pay -> status == student_pay ::get_status_types()['new'])
+                return true;
         }
 
         return false;
