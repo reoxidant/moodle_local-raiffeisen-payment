@@ -15,5 +15,5 @@ use classes\raiffeisen;
 
 if ($_POST ?? null) {
     $payment = raiffeisen ::getInstance();
-    $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type']);
+    $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId']);
 }

@@ -108,8 +108,9 @@ class BankSystem
     {
         foreach ($payments as $id => $payment) {
             $user = $this -> getUserByPayment($payment);
-            $this -> validateFields($payment, $id, $user);
-            $this -> connect($id);
+            if ($this -> validateFields($payment, $id, $user)) {
+                $this -> connect($id);
+            }
         }
     }
 

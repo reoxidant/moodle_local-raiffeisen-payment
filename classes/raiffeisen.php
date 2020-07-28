@@ -65,21 +65,23 @@ class raiffeisen
     /**
      * @param $summ
      * @param $goods_type
+     * @param $order_id
      */
-    private function recordNewPay($summ, $goods_type): void
+    private function recordNewPay($summ, $goods_type, $order_id): void
     {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff');
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id);
     }
 
     /**
      * @param $summ
      * @param $goods_type
      * @param $pay_type
+     * @param $order_id
      * @return bool
      */
-    private function validateFormData($summ, $goods_type, $pay_type): bool
+    private function validateFormData($summ, $goods_type, $pay_type, $order_id): bool
     {
-        if ($this -> validateNumber($summ) && $this -> validateGoodType($goods_type) && $this -> validatePayType($pay_type)) {
+        if ($this -> validateNumber($summ) && $this -> validateNumber($order_id) && $this -> validateTypes($pay_type) && $this -> validateTypes($goods_type)) {
             return true;
         } else {
             return false;
@@ -92,23 +94,14 @@ class raiffeisen
      */
     private function validateNumber($num): bool
     {
-        return preg_match('/\d++/s', $num);
+        return preg_match('/^\d++$/s', $num);
     }
 
     /**
      * @param $str
      * @return bool
      */
-    private function validateGoodType($str): bool
-    {
-        return preg_match('/^type[1-2]$/s', $str);
-    }
-
-    /**
-     * @param $str
-     * @return bool
-     */
-    private function validatePayType($str): bool
+    private function validateTypes($str): bool
     {
         return preg_match('/^type[1-2]$/s', $str);
     }
@@ -117,11 +110,12 @@ class raiffeisen
      * @param $summ
      * @param $goods_type
      * @param $pay_type
+     * @param $order_id
      */
-    public function createPay($summ, $goods_type, $pay_type): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id): void
     {
-        if ($this -> validateFormData($summ, $goods_type, $pay_type)) {
-            $this -> recordNewPay($summ, $goods_type);
+        if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
+            $this -> recordNewPay($summ, $goods_type, $order_id);
         }
     }
 }

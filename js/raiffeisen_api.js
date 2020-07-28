@@ -28,6 +28,8 @@ const ready = () => {
 
                 const amount = document.querySelector('#id_summ').value;
 
+                console.log("orderId: " + orderId)
+
                 // noinspection JSValidateTypes
                 require(['core/notification'], function (Notification) {
                     // noinspection JSUnresolvedFunction
@@ -36,6 +38,7 @@ const ready = () => {
                         amount: amount
                     }).then(function () {
                         let formData = new FormData(pay_form);
+                        formData.append('orderId', `${orderId}`);
                         Notification.addNotification({
                             message: "Оплата совершена успешно!",
                             type: "success"
