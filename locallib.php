@@ -154,8 +154,8 @@ class student_pay
             $record -> goods_type = $goods_type;
             $record -> status = $new_status_id;
             $record -> bank = $bank_name;
-            if($external_order_id ?? null){
-                $record->external_order_id = $external_order_id;
+            if ($external_order_id ?? null) {
+                $record -> external_order_id = $external_order_id;
             }
             $orderid = $DB -> insert_record('student_pays', $record);
         } catch (Exception $e) {
