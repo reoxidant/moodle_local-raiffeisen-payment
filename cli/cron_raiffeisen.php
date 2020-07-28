@@ -159,9 +159,8 @@ class BankSystem
         curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/payments/v1/orders/' . $orderId . '/transaction');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMDAwMDE3ODAzNTcwMDEtODAzNTcwMDEiLCJqdGkiOiIzMGQ2MjM4Yi03MjY3LTRlNWEtOGEwYi04OGY3NTRhNmQ4MTYifQ.Douj-vNUWCS9AA_CfurLqZ2kPwODKIovMPKHzrM3D0A
         $headers = array();
-        $headers[] = 'Authorization: Bearer ' + $config -> rai_api_secret_key;
+        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key;
         $headers[] = 'Content-Type: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
