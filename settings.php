@@ -112,4 +112,15 @@ if ($hassiteconfig) {
     $default = get_string('goods_name', 'local_student_pay');
     $setting = new admin_setting_configtext($name, $title, null, $default);
     $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_secret_key';
+    $title = get_string('rai_api_secret_key', 'local_student_pay');
+    $setting = new admin_setting_configtext($name, $title, null, null);
+    $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_url';
+    $title = get_string('rai_api_url', 'local_student_pay');
+    $default = 'https://test.ecom.raiffeisen.ru';
+    $setting = new admin_setting_configtext($name, $title, null, $default);
+    $settings -> add($setting);
 }
