@@ -149,6 +149,7 @@ class BankSystem
 
     /**
      * @param $orderId
+     * @throws dml_exception
      */
     public function connect($orderId): void
     {

@@ -68,7 +68,7 @@ const getOrderId = async (keyName) => {
             body: 'key=' + keyName
         }
 
-        return await fetch('/local/student_pay/lib/raiffeisen_order.php', requestParam)
+        return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam)
             .then((response) => response.text())
             .then((responseData) => {
                 return parseInt(responseData, 10);
@@ -85,7 +85,7 @@ const promiseSender = async (form_data) => {
         body: form_data
     }
 
-    await fetch('/local/student_pay/lib/raiffeisen_record.php', requestParam);
+    await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
 }
 
 document.addEventListener("DOMContentLoaded", ready);

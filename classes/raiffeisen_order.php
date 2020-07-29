@@ -1,14 +1,16 @@
 <?php
 /**
- * Get information about order for pay
+ * Description actions
  * @author vshapovalov
- * @date 24/7/2020
+ * @date 29/7/2020
  * @copyright 2020 Moscow Witte University. All rights reserved.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package moodle
  */
 
-require_once('../../../config.php');
+namespace classes;
+
+defined('MOODLE_INTERNAL') || die;
 
 class raiffeisen_order
 {
@@ -37,13 +39,4 @@ class raiffeisen_order
         return $DB -> get_record_sql("SELECT MAX(Id) FROM {student_pays}");
     }
 
-}
-
-if ($_POST['key'] ?? null) {
-    if ($_POST['key'] === 'new') {
-        $order = raiffeisen_order ::getInstance();
-        echo $order -> getOrderId();
-    } else {
-        throw new \moodle_exception('Ошибка при получении параметра: orderId');
-    }
 }
