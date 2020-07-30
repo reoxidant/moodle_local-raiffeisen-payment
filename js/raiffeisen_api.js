@@ -7,9 +7,21 @@
  * @package moodle
  */
 
+import createNewInputRaiPay from './rai_type_pay.js';
+import {getOrderId, promiseSender} from './promiseHandler.js';
+
 const ready = () => {
     const pay_form = document.querySelector('.mform');
     const selector = document.querySelector('#id_pay_type');
+    const button_form = document.querySelector('#fitem_id_submitbutton');
+
+    let pay_selector = createNewInputRaiPay;
+
+    selector.addEventListener('change', (e) => {
+        console.log(e.target, "target");
+    });
+
+    pay_form.insertBefore(pay_selector, button_form);
 
     pay_form.addEventListener('submit', function (e) {
         if (selector.options[selector.selectedIndex].value === 'type2') {
@@ -27,8 +39,6 @@ const ready = () => {
                 const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
 
                 const amount = document.querySelector('#id_summ').value;
-
-                console.log("orderId: " + orderId)
 
                 // noinspection JSValidateTypes
                 require(['core/notification'], function (Notification) {
@@ -57,35 +67,5 @@ const ready = () => {
         }
     });
 };
-
-const getOrderId = async (keyName) => {
-    if (keyName !== null && keyName === "new") {
-        const requestParam = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-            body: 'key=' + keyName
-        }
-
-        return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam)
-            .then((response) => response.text())
-            .then((responseData) => {
-                return parseInt(responseData, 10);
-            }).catch((error) => {
-                throw error;
-            })
-    }
-}
-
-const promiseSender = async (form_data) => {
-
-    const requestParam = {
-        method: 'POST',
-        body: form_data
-    }
-
-    await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
-}
 
 document.addEventListener("DOMContentLoaded", ready);

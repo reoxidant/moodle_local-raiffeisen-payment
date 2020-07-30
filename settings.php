@@ -113,8 +113,13 @@ if ($hassiteconfig) {
     $setting = new admin_setting_configtext($name, $title, null, $default);
     $settings -> add($setting);
 
-    $name = 'local_student_pay/rai_api_secret_key';
-    $title = get_string('rai_api_secret_key', 'local_student_pay');
+    $name = 'local_student_pay/rai_api_secret_key_ecom';
+    $title = get_string('rai_api_secret_key_ecom', 'local_student_pay');
+    $setting = new admin_setting_configtext($name, $title, null, null);
+    $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_secret_key_sbp';
+    $title = get_string('rai_api_secret_key_sbr', 'local_student_pay');
     $setting = new admin_setting_configtext($name, $title, null, null);
     $settings -> add($setting);
 

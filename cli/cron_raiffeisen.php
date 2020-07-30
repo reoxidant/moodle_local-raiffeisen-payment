@@ -103,6 +103,8 @@ class BankSystem
 {
     /**
      * @param $payments
+     * @throws dml_exception
+     * @throws dml_exception
      */
     public function handlerStatusByPayments($payments): void
     {

@@ -78,5 +78,6 @@ $string['pay_type_rai'] = "Оплатить через Райффайзенба�
 $string['pay_type_sber'] = "Оплатить через Сбербанк";
 
 //for settings.php
-$string['rai_api_secret_key'] = "Секретный ключ";
+$string['rai_api_secret_key_ecom'] = "Секретный ключ от ECOM";
+$string['rai_api_secret_key_sbr'] = "Секретный ключ от SBP";
 $string['rai_api_url'] = "Адрес подключенного Api";
