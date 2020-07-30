@@ -163,7 +163,7 @@ class BankSystem
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         $headers = array();
-        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key;
+        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_ecom;
         $headers[] = 'Content-Type: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

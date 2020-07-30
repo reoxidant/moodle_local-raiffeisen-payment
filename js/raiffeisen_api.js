@@ -18,10 +18,10 @@ const ready = () => {
     let pay_selector = createNewInputRaiPay;
 
     selector.addEventListener('change', (e) => {
-        console.log(e.target, "target");
+        if (e.target[selector.selectedIndex].value == 'type2') {
+            pay_form.insertBefore(pay_selector, button_form);
+        }
     });
-
-    pay_form.insertBefore(pay_selector, button_form);
 
     pay_form.addEventListener('submit', function (e) {
         if (selector.options[selector.selectedIndex].value === 'type2') {
