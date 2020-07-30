@@ -2,9 +2,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
+    /** @noinspection PhpIncludeInspection */
     require_once($CFG -> dirroot . '/local/student_pay/locallib.php');
 
     $settings = new admin_settingpage('local_student_pay', get_string('pluginname', 'local_student_pay'));
+    /** @noinspection PhpUndefinedVariableInspection */
     $ADMIN -> add('localplugins', $settings);
 
     $name = 'local_student_pay/sber_url';
@@ -110,6 +112,22 @@ if ($hassiteconfig) {
     $name = 'local_student_pay/life_pay_product_name';
     $title = get_string('life_pay_product_name', 'local_student_pay');
     $default = get_string('goods_name', 'local_student_pay');
+    $setting = new admin_setting_configtext($name, $title, null, $default);
+    $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_secret_key_ecom';
+    $title = get_string('rai_api_secret_key_ecom', 'local_student_pay');
+    $setting = new admin_setting_configtext($name, $title, null, null);
+    $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_secret_key_sbp';
+    $title = get_string('rai_api_secret_key_sbr', 'local_student_pay');
+    $setting = new admin_setting_configtext($name, $title, null, null);
+    $settings -> add($setting);
+
+    $name = 'local_student_pay/rai_api_url';
+    $title = get_string('rai_api_url', 'local_student_pay');
+    $default = 'https://test.ecom.raiffeisen.ru';
     $setting = new admin_setting_configtext($name, $title, null, $default);
     $settings -> add($setting);
 }

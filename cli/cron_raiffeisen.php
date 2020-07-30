@@ -103,13 +103,16 @@ class BankSystem
 {
     /**
      * @param $payments
+     * @throws dml_exception
+     * @throws dml_exception
      */
     public function handlerStatusByPayments($payments): void
     {
         foreach ($payments as $id => $payment) {
             $user = $this -> getUserByPayment($payment);
-            $this -> validateFields($payment, $id, $user);
-            $this -> connect($id);
+            if ($this -> validateFields($payment, $id, $user)) {
+                $this -> connect($id);
+            }
         }
     }
 
@@ -123,7 +126,8 @@ class BankSystem
     private function validateFields($val_pay, $id, $user): bool
     {
         if (($id && $val_pay -> amount && $val_pay -> external_order_id) ?? null) {
-            return ($user -> username ?? null && $val_pay -> status == Subsystem ::$status_arr['new']);
+            if ($user -> username ?? null && $val_pay -> status == student_pay ::get_status_types()['new'])
+                return true;
         }
 
         return false;
@@ -147,21 +151,19 @@ class BankSystem
 
     /**
      * @param $orderId
+     * @throws dml_exception
      */
     public function connect($orderId): void
     {
+        $config = get_config('local_student_pay');
         $ch = curl_init();
-        $fp_err = fopen($_SERVER['DOCUMENT_ROOT'] . '/verbose_file.txt', 'ab+');
-        fwrite($fp_err, date('Y-m-d H:i:s') . "\n\n"); //add timestamp to the verbose log
         curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_STDERR, $fp_err);
-        curl_setopt($ch, CURLOPT_URL, 'https://test.ecom.raiffeisen.ru/api/payments/v1/orders/' . $orderId . '/transaction');
+        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/payments/v1/orders/' . $orderId . '/transaction');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-
         $headers = array();
-        $headers[] = 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwMDAwMDE3ODAzNTcwMDEtODAzNTcwMDEiLCJqdGkiOiIzMGQ2MjM4Yi03MjY3LTRlNWEtOGEwYi04OGY3NTRhNmQ4MTYifQ.Douj-vNUWCS9AA_CfurLqZ2kPwODKIovMPKHzrM3D0A';
+        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_ecom;
         $headers[] = 'Content-Type: application/json';
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 

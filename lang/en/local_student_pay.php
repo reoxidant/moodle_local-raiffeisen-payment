@@ -76,3 +76,8 @@ $string['rai_pay_success'] = "Оплата совершена успешно!";
 $string['rai_pay_error'] = "Оплата не совершена, попробуйте еще раз!";
 $string['pay_type_rai'] = "Оплатить через Райффайзенбанк";
 $string['pay_type_sber'] = "Оплатить через Сбербанк";
+
+//for settings.php
+$string['rai_api_secret_key_ecom'] = "Секретный ключ от ECOM";
+$string['rai_api_secret_key_sbr'] = "Секретный ключ от SBP";
+$string['rai_api_url'] = "Адрес подключенного Api";

@@ -89,7 +89,8 @@ $PAGE -> requires -> js('/local/student_pay/js/main.js');
 //test
 $PAGE -> requires -> js(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.js'));
 //e-commerce url https://e-commerce.raiffeisen.ru/pay/
-$PAGE -> requires -> js('/local/student_pay/js/raiffeisen_api.js');
+echo "<script type='module' src='/local/student_pay/js/raiffeisen/api.js'></script>";
+//$PAGE -> requires -> js('/local/student_pay/js/raiffeisen_api.js');
 
 echo $OUTPUT -> footer();
 
