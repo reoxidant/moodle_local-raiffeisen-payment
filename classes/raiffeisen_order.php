@@ -14,7 +14,7 @@ defined('MOODLE_INTERNAL') || die;
 
 class raiffeisen_order
 {
-    private static $instance;
+    // --Commented out by Inspection (30.07.2020 17:25):private static $instance;
 
     protected function __construct()
     {
@@ -38,5 +38,4 @@ class raiffeisen_order
         global $DB;
         return $DB -> get_record_sql("SELECT MAX(Id) FROM {student_pays}");
     }
-
 }

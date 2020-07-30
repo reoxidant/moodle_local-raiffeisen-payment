@@ -22,10 +22,13 @@ use student_pay;
  */
 class raiffeisen
 {
-    /**
-     * @var null
-     */
-    private static $instance = null;
+// --Commented out by Inspection START (30.07.2020 17:25):
+//    /**
+//     * @var null
+//     */
+//    private static $instance = null;
+// --Commented out by Inspection STOP (30.07.2020 17:25)
+
 
     /**
      * raiffeisen constructor.
@@ -66,10 +69,11 @@ class raiffeisen
      * @param $summ
      * @param $goods_type
      * @param $order_id
+     * @param $qrId
      */
-    private function recordNewPay($summ, $goods_type, $order_id): void
+    private function recordNewPay($summ, $goods_type, $order_id, $qrId): void
     {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id);
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId);
     }
 
     /**
@@ -81,7 +85,12 @@ class raiffeisen
      */
     private function validateFormData($summ, $goods_type, $pay_type, $order_id): bool
     {
-        if ($this -> validateNumber($summ) && $this -> validateNumber($order_id) && $this -> validateTypes($pay_type) && $this -> validateTypes($goods_type)) {
+        if (
+            $this -> validateNumber($summ) &&
+            $this -> validateNumber($order_id) &&
+            $this -> validateTypes($pay_type) &&
+            $this -> validateTypes($goods_type)
+        ) {
             return true;
         } else {
             return false;
@@ -106,16 +115,22 @@ class raiffeisen
         return preg_match('/^type[1-2]$/s', $str);
     }
 
+    public function generateQrCode(): string
+    {
+        //TODO: write curl generator qr code from api
+    }
+
     /**
      * @param $summ
      * @param $goods_type
      * @param $pay_type
      * @param $order_id
+     * @param null $qrId
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
-            $this -> recordNewPay($summ, $goods_type, $order_id);
+            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId);
         }
     }
 }

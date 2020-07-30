@@ -7,7 +7,7 @@
  * @package moodle
  */
 
-const getOrderId = async (keyName) => {
+const promiseGetOrderId = async (keyName) => {
     if (keyName !== null && keyName === "new") {
         const requestParam = {
             method: 'POST',
@@ -27,7 +27,7 @@ const getOrderId = async (keyName) => {
     }
 }
 
-const promiseSender = async (form_data) => {
+const promiseSendFormData = async (form_data) => {
 
     const requestParam = {
         method: 'POST',
@@ -37,4 +37,4 @@ const promiseSender = async (form_data) => {
     await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
 }
 
-export {getOrderId, promiseSender};
+export {promiseGetOrderId, promiseSendFormData};

@@ -2,9 +2,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
+    /** @noinspection PhpIncludeInspection */
     require_once($CFG -> dirroot . '/local/student_pay/locallib.php');
 
     $settings = new admin_settingpage('local_student_pay', get_string('pluginname', 'local_student_pay'));
+    /** @noinspection PhpUndefinedVariableInspection */
     $ADMIN -> add('localplugins', $settings);
 
     $name = 'local_student_pay/sber_url';

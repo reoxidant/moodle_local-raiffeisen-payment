@@ -21,10 +21,14 @@ if ($_POST ?? null) {
             $order = raiffeisen_order ::getInstance();
             echo $order -> getOrderId();
         } else {
-            throw new \moodle_exception('Ошибка при получении параметра: orderId');
+            throw new moodle_exception('Ошибка при получении параметра: orderId');
         }
     } else {
+        $id_qr_code = null;
         $payment = raiffeisen ::getInstance();
-        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId']);
+        if ($_POST['raiffeisen_type_pay'] !== null && $_POST['raiffeisen_type_pay'] === 'type1') {
+            $payment -> generateQrCode();
+        }
+        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $id_qr_code);
     }
 }

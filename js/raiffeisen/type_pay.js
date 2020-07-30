@@ -28,6 +28,6 @@ export const createNewInputRaiPay = () => {
     return pay_selector;
 }
 
-export default createNewInputRaiPay();
+export default createNewInputRaiPay;
 
 
