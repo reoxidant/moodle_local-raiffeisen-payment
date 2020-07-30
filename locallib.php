@@ -28,6 +28,15 @@ class pay_form extends moodleform
         // This will select the colour blue.
         $select -> setSelected('type1');
 
+        $options_pay = array(
+            'type1' => get_string('pay_type_sber', 'local_student_pay'),
+            'type2' => get_string('pay_type_rai', 'local_student_pay')
+        );
+
+        $select_pay = $mform -> addElement('select', 'pay_type', '', $options_pay);
+
+        $select_pay -> setSelected('type1');
+
         $this -> add_action_buttons(false, get_string('submit_button_text', 'local_student_pay')); // false - без cancel
     }
 
@@ -126,11 +135,11 @@ class student_pay
     }
 
     // основные функции
-    public static function createNewOrder($summ, $goods_type)
+    public static function createNewOrder($summ, $goods_type, $status_id = null, $bank_name = 'sber', $external_order_id = null, $id_qr_code = null)
     {
         global $USER, $DB;
 
-        $new_status_id = self ::$config -> status_new;
+        $new_status_id = ($status_id) ? $status_id : self ::$config -> status_new;
 
         $timenow = time();
 
@@ -144,6 +153,9 @@ class student_pay
             $record -> amount = $summ;
             $record -> goods_type = $goods_type;
             $record -> status = $new_status_id;
+            $record -> bank = $bank_name;
+            ($external_order_id ?? null) ? $record -> external_order_id = $external_order_id : null;
+            ($id_qr_code ?? null) ? ($record -> id_qr_code = $id_qr_code) : null;
             $orderid = $DB -> insert_record('student_pays', $record);
         } catch (Exception $e) {
         }
@@ -202,6 +214,11 @@ class student_pay
     public static function do_pay($summ, $goods_type)
     {
         global $USER, $CFG, $STATUS_TYPES;
+
+        /*echo '<pre>';
+        print_r($pay_type);
+        echo '</pre>';
+        die('Дебаг');*/
 
         if (!preg_match('/^\d+$/', $USER -> username))
             return "username not int";

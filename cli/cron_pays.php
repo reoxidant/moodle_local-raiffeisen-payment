@@ -2,18 +2,18 @@
 define('CLI_SCRIPT', true);
 require(__DIR__ . '/../../../config.php');
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
+require_once($CFG -> dirroot . "/local/student_pay/cli/cron_raiffeisen.php");
 $err_file = '/var/log/php/stud_pays.log';
-
 $config_data = get_config('local_student_pay');
 $ws_timeout = (int)$config_data -> ws_timeout;
 $ws_timeout = $ws_timeout > 0 ? $ws_timeout : 1;
+
 ini_set("default_socket_timeout", $ws_timeout);
 try {
     $status_arr = array($STATUS_TYPES['new'], $STATUS_TYPES['paid']);
     $results = student_pay ::getOrdersByStatus($status_arr);
+
     if (count($results)) {
-
-
         $WS_params = array('login' => $config_data -> ws_user, 'password' => $config_data -> ws_pass, 'connection_timeout' => $ws_timeout);
         $status_url = $config_data -> sber_url . $config_data -> sber_statusurl;
         $sber_user = $config_data -> sber_user;
@@ -29,9 +29,9 @@ try {
                     $paid = false;
                     if ($val -> status == $STATUS_TYPES['new']) {
                         $PARAMS = array(
-                            'orderId' => $val -> external_order_id,            // Внутренний ID заказа
-                            'userName' => $sber_user,            // А тут его логин
-                            'password' => $sber_pass,            // Здесь пароль от вашего API юзера в Сбербанке
+                            'orderId' => $val -> external_order_id, // Внутренний ID заказа
+                            'userName' => $sber_user, // А тут его логин
+                            'password' => $sber_pass, // Здесь пароль от вашего API юзера в Сбербанке
                         );
 
                         $SBERresult = student_pay ::sendRequest($PARAMS, $status_url);//file_put_contents($err_file, $result);
@@ -117,8 +117,8 @@ try {
                             $res = $Sclient -> put($params);
                             if (isset($res -> return) && $res -> return == 'true') {
                                 student_pay ::updateOrderStatus($id, $STATUS_TYPES['sended1c']);
-                            } elseif (is_soap_fault($res)) {
-                                $error = "Ошибка SOAP: (faultcode: {$res->faultcode}, faultstring: {$res->faultstring})";
+                            } elseif (is_soap_fault($res)){
+                            $error = "Ошибка SOAP: (faultcode: {$res->faultcode}, faultstring: {$res->faultstring})";
                                 report_error($error);
                             } elseif (isset($res -> return)) {
                                 $error = $res -> return;
@@ -139,6 +139,13 @@ try {
     // foreach($NonFiscalPays as $record){
     // student_pay::sendToFiscal_LifePay($record);
     // }
+} catch (Exception $e) {
+    $error = $e -> getMessage();
+    report_error($error);
+}
+try {
+    $raiffeisenFacade = new cron_raiffeisen();
+    $raiffeisenFacade -> checkStatusOperations();
 } catch (Exception $e) {
     $error = $e -> getMessage();
     report_error($error);
