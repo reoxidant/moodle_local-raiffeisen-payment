@@ -25,6 +25,7 @@ $PAGE -> set_title($title);
 $PAGE -> set_cacheable(false);
 $PAGE -> requires -> css('/local/student_pay/styles.css');
 $PAGE -> requires -> css(new moodle_url('https://test.ecom.raiffeisen.ru/pay/sdk/v2/payment.min.css'));
+$PAGE -> requires -> css('/local/student_pay/js/raiffeisen/popup/popup.css');
 
 $mform = new pay_form;
 

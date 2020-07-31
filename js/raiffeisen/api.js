@@ -7,10 +7,10 @@
  * @package moodle
  */
 
-import createNewInputRaiPay from './type_pay';
-import {promiseGetOrderId} from './promise_handler';
-import ecom from "./ecom";
-import sbp from "./sbp";
+import createNewInputRaiPay from './type_pay.js';
+import {promiseGetOrderId} from './promise_handler.js';
+import ecom from "./ecom.js";
+import sbp from "./sbp.js";
 
 const ready = () => {
     const pay_form = document.querySelector('.mform');
@@ -40,7 +40,7 @@ const ready = () => {
 
                 const rai_type_pay = document.querySelector('#rai_type_pay');
 
-                (rai_type_pay.options[rai_type_pay.selectedIndex].value === "type1") ? sbp() : ecom(orderId, pay_form);
+                (rai_type_pay.options[rai_type_pay.selectedIndex].value === "type1") ? sbp(pay_form) : ecom(orderId, pay_form);
             });
         }
     });

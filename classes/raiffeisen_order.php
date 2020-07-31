@@ -14,7 +14,7 @@ defined('MOODLE_INTERNAL') || die;
 
 class raiffeisen_order
 {
-    // --Commented out by Inspection (30.07.2020 17:25):private static $instance;
+    private static $instance;
 
     protected function __construct()
     {
