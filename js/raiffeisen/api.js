@@ -40,7 +40,7 @@ const ready = () => {
 
                 const rai_type_pay = document.querySelector('#rai_type_pay');
 
-                (rai_type_pay.options[rai_type_pay.selectedIndex].value === "type1") ? sbp(pay_form) : ecom(orderId, pay_form);
+                (rai_type_pay.options[rai_type_pay.selectedIndex].value === "type1") ? sbp(orderId, pay_form) : ecom(orderId, pay_form);
             });
         }
     });

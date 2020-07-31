@@ -22,13 +22,7 @@ use student_pay;
  */
 class raiffeisen
 {
-// --Commented out by Inspection START (30.07.2020 17:25):
-//    /**
-//     * @var null
-//     */
-//    private static $instance = null;
-// --Commented out by Inspection STOP (30.07.2020 17:25)
-
+    private static $instance = null;
 
     /**
      * raiffeisen constructor.
@@ -117,7 +111,7 @@ class raiffeisen
         return preg_match('/^type[1-2]$/s', $str);
     }
 
-    public function generateQrCode($amount, $orderId): string
+    public function generateQrCode($amount, $orderId): array
     {
         //TODO: write curl generator qr code from api
 
@@ -161,7 +155,7 @@ class raiffeisen
                 throw new Exception("Ошибка при совершении запроса", $error);
             }
 
-            echo json_decode($result);
+            return get_object_vars($result);
         } else {
             throw new Exception("Данные не прошли валидацию");
         }

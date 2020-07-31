@@ -15,7 +15,7 @@ import {
     insertPopupToPageContainer
 } from "./popup/popup.js";
 
-const sbp = (pay_form) => {
+const sbp = async (orderId, pay_form) => {
 
     const popup = getPopupNodeHtml();
 
@@ -23,12 +23,14 @@ const sbp = (pay_form) => {
     addPopupEventOnCloseWindow(popup);
 
     const formData = new FormData(pay_form);
+    formData.append('orderId', `${orderId}`);
 
     //TODO: append data to popup
-    promiseSendFormData(formData)
-        .then(result => {
-            console.log(result);
-            addGeneratedQrCodeToThePopup(popup)
+    await promiseSendFormData(formData)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            addGeneratedQrCodeToThePopup(popup, data)
         })
         .catch(error => {
             if (error) {
