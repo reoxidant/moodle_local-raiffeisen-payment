@@ -7,36 +7,47 @@
  * @package moodle
  */
 
-import {promiseSendFormData} from "./promise_handler";
+import {promiseSendFormData} from "./promise_handler.js";
+import {
+    addGeneratedQrCodeToThePopup,
+    addPopupEventOnCloseWindow,
+    getPopupNodeHtml,
+    insertPopupToPageContainer
+} from "./popup/popup.js";
 
-const sbp = (pay_form) => {
-    // noinspection JSValidateTypes
-    require(['core/notification'], function (Notification) {
-        const formData = new FormData(pay_form);
-        promiseSendFormData(formData).catch(error => {
+const sbp = async (orderId, pay_form) => {
 
-            const preview = `
-                <a href="#">
-                <img alt="QR_SBP.png" src="#" 
-                     style=" margin-left: 8px; /* width: 258px; */ box-shadow: 0 0 10px rgba(0,0,0,0.5); " 
-                     title="Оплатить по QR-коду">
-                </a>`;
+    const popup = getPopupNodeHtml();
 
-            document.write(preview);
+    insertPopupToPageContainer(popup);
+    addPopupEventOnCloseWindow(popup);
 
+    const formData = new FormData(pay_form);
+    formData.append('orderId', `${orderId}`);
+
+    await promiseSendFormData(formData)
+        .then((response) => response.json())
+        .then(data => {
+            require(['core/notification'], function (Notification) {
+                console.log(data);
+
+                let {code, message} = data;
+
+                if (code === "SUCCESS") {
+                    addGeneratedQrCodeToThePopup(popup, {...data})
+                } else {
+                    Notification.addNotification({
+                        message: message,
+                        type: "error"
+                    })
+                }
+            });
+        })
+        .catch(error => {
             if (error) {
-                Notification.addNotification({
-                    message: "Оплата не совершена, попробуйте еще раз!",
-                    type: "error"
-                });
-            } else {
-                Notification.addNotification({
-                    message: "Оплата совершена успешно!",
-                    type: "success"
-                });
+                throw error;
             }
         })
-    });
 }
 
 export default sbp;

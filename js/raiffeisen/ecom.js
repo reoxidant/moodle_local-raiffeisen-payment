@@ -8,7 +8,7 @@
  */
 
 // noinspection JSUnresolvedFunction
-import {promiseSendFormData} from "./promise_handler";
+import {promiseSendFormData} from "./promise_handler.js";
 
 const ecom = (orderId, pay_form) => {
     // noinspection JSUnresolvedFunction
