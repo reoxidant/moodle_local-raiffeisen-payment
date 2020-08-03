@@ -135,11 +135,11 @@ class student_pay
     }
 
     // основные функции
-    public static function createNewOrder($summ, $goods_type, $status_id = null, $bank_name = 'sber', $external_order_id = null, $id_qr_code = null)
+    public static function createNewOrder($summ, $goods_type, $status_id = null, $bank_name = 'sber', $external_order_id = null, $id_qr_code = null, $code_error = null)
     {
         global $USER, $DB;
 
-        $new_status_id = ($status_id) ? $status_id : self ::$config -> status_new;
+        $new_status_id = ($status_id) ? $status_id : self :: $config -> status_new;
 
         $timenow = time();
 
@@ -156,6 +156,10 @@ class student_pay
             $record -> bank = $bank_name;
             ($external_order_id ?? null) ? $record -> external_order_id = $external_order_id : null;
             ($id_qr_code ?? null) ? ($record -> id_qr_code = $id_qr_code) : null;
+            if($code_error ?? null){
+                $record -> error = $code_error;
+                $record -> status = 5;
+            }
             $orderid = $DB -> insert_record('student_pays', $record);
         } catch (Exception $e) {
         }

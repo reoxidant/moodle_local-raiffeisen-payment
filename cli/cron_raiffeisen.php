@@ -111,7 +111,11 @@ class BankSystem
         foreach ($payments as $id => $payment) {
             $user = $this -> getUserByPayment($payment);
             if ($this -> validateFields($payment, $id, $user)) {
-                $this -> connect($id);
+                if($payment -> id_qr_code ?? null){
+                    $this-> checkSbpPay($payment -> id_qr_code);
+                }else{
+                    $this -> checkEcomPay($id);
+                }
             }
         }
     }
@@ -153,7 +157,7 @@ class BankSystem
      * @param $orderId
      * @throws dml_exception
      */
-    public function connect($orderId): void
+    public function checkEcomPay($orderId): void
     {
         $config = get_config('local_student_pay');
         $ch = curl_init();
@@ -203,5 +207,36 @@ class BankSystem
         }
         curl_close($ch);
         return $error;
+    }
+
+    private function checkSbpPay($qrId)
+    {
+
+
+        $ch = curl_init();
+        $fp_err = fopen($_SERVER['DOCUMENT_ROOT'].'/verbose_file.txt', 'ab+');
+        fwrite($fp_err, date('Y-m-d H:i:s')."\n\n"); //add timestamp to the verbose log
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_STDERR, $fp_err);
+        curl_setopt($ch, CURLOPT_URL, "https://test.ecom.raiffeisen.ru/api/sbp/v1/qr/".$qrId."/payment-info");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJNQTAwMDAwMDMwMjgiLCJqdGkiOiIxOTAyM2U3Yy1mNGJiLTQ2MjUtOWI3Ny01YjNlZmU2NmU3MmUifQ.aPQ_b5gndGk-ktKGNwdCHd6jpVix_SrfNBwko8TRoyE';
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = json_decode(curl_exec($ch));
+
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close($ch);
+
+        var_dump($result);
+
     }
 }

@@ -64,10 +64,11 @@ class raiffeisen
      * @param $goods_type
      * @param $order_id
      * @param $qrId
+     * @param $error
      */
-    private function recordNewPay($summ, $goods_type, $order_id, $qrId): void
+    private function recordNewPay($summ, $goods_type, $order_id, $qrId, $error): void
     {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId);
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId, $error);
     }
 
     /**
@@ -168,11 +169,12 @@ class raiffeisen
      * @param $order_id
      * @param $rai_type_pay
      * @param null $qrId
+     * @param $error
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id, $rai_type_pay, $qrId): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id, $rai_type_pay, $qrId, $error): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id, $rai_type_pay)) {
-            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId);
+            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId, $error);
         }
     }
 }

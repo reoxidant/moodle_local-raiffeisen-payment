@@ -29,8 +29,9 @@ if ($_POST ?? null) {
         if ($_POST['raiffeisen_type_pay'] === 'type1') {
             $result = $payment -> generateQrCode($_POST['summ'], $_POST['orderId']);
             $id_qr_code = $result["qrId"];
+            $error = ($id_qr_code ?? null) ? null : $result["code"];
             echo json_encode($result);
         }
-        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $_POST['rai_type_pay'], $id_qr_code);
+        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $_POST['rai_type_pay'], $id_qr_code, $error);
     }
 }
