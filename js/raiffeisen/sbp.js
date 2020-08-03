@@ -25,12 +25,23 @@ const sbp = async (orderId, pay_form) => {
     const formData = new FormData(pay_form);
     formData.append('orderId', `${orderId}`);
 
-    //TODO: append data to popup
     await promiseSendFormData(formData)
-        .then(response => response.json())
+        .then((response) => response.json())
         .then(data => {
-            console.log(data);
-            addGeneratedQrCodeToThePopup(popup, data)
+            require(['core/notification'], function (Notification) {
+                console.log(data);
+
+                let {code, message} = data;
+
+                if (code === "SUCCESS") {
+                    addGeneratedQrCodeToThePopup(popup, {...data})
+                } else {
+                    Notification.addNotification({
+                        message: message,
+                        type: "error"
+                    })
+                }
+            });
         })
         .catch(error => {
             if (error) {

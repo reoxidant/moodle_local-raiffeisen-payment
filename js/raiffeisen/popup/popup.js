@@ -42,18 +42,16 @@ const addPopupEventOnCloseWindow = (popup) => {
     })
 }
 
-const addGeneratedQrCodeToThePopup = (popup) => {
+const addGeneratedQrCodeToThePopup = (popup, {payload, qrUrl}) => {
     const qrCodeElement = document.createElement('div');
     qrCodeElement.innerHTML = `
-            <a href="#">
-                <img alt="QR_SBP.png" src="#"
-                     style="margin-left: 8px; width: 258px; box-shadow: 0 0 10px rgba(0,0,0,0.5);"
-                     title="Оплатить по QR-коду">
+            <a href="${payload}">
+                <img alt="QR_SBP.png" src="${qrUrl}" title="Оплатить по QR-коду">
             </a>`;
 
     qrCodeElement.setAttribute('id', 'qr-code');
 
-    popup.appendChild(qrCodeElement);
+    popup.getElementsByClassName("wrap-list_content")[0].appendChild(qrCodeElement);
 }
 
 export {getPopupNodeHtml, insertPopupToPageContainer, addPopupEventOnCloseWindow, addGeneratedQrCodeToThePopup};
