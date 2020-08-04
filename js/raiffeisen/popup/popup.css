@@ -7,6 +7,8 @@
  * @package moodle
  */
 
+/*Popup window*/
+
 .popup_root {
     position: fixed;
     left: 0;
@@ -73,6 +75,8 @@
     margin-top: 20px;
     width: 100%;
     padding: 20px 0 24px;
+    border-bottom: 1px solid;
+    border-color: #d6d6d6;
 }
 
 .header-info{
@@ -120,6 +124,28 @@
     height: 26px;
 }
 
+/*content*/
+
+.content-app{
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px 0 24px;
+    min-height: 300px;
+}
+
+/*footer*/
+
+.footer-app{
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px 0px 24px;
+}
+
+.footer-section{
+    max-width: 392px;
+    margin: auto;
+}
+
 .bottom-icon_section{
     display: flex;
     flex-direction: row;
@@ -128,23 +154,6 @@
     justify-content: space-between;
     -webkit-box-align: center;
     align-items: center;
-}
-
-#qr-code img{
-    margin-left: 8px;
-    width: 258px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-.footer-section{
-    max-width: 392px;
-    margin: auto;
-}
-
-.footer-app{
-    margin-top: 20px;
-    width: 100%;
-    padding: 20px 0px 24px;
 }
 
 .rai-icon_text{
@@ -166,4 +175,64 @@
     display: inline-block;
     width: 84px;
     height: 24px;
+}
+
+/*QR-code*/
+
+#qr-code {
+    display: flex;
+    flex-direction: row;
+    max-width: 392px;
+    margin: auto;
+    text-align: left;
+}
+
+.qr-code_image {
+    padding-top: 2px;
+}
+
+.qr-code_image img{
+    width: 200px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.qr-code_desc {
+    padding-left: 20px;
+    display: block;
+    font-family: Helvetica, "Helvetica New", Arial, sans-serif;
+}
+
+.desc-header span {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.desc-header {
+    width: 230px;
+}
+
+.desc-content {
+    width: 175px;
+}
+
+.qr-code_desc ol {
+    font-size: 15px;
+    padding-left: 0;
+    counter-reset: item;
+}
+
+.qr-code_desc li {
+    margin-top: 10px;
+    line-height: 18px;
+}
+
+.qr-code_desc ol li {
+    display: block;
+}
+
+.qr-code_desc ol li:before {
+    content: counter(item) ". ";
+    counter-increment: item;
+    font-weight: bold;
 }
