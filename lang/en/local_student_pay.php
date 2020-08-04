@@ -81,3 +81,4 @@ $string['pay_type_sber'] = "Оплатить через Сбербанк";
 $string['rai_api_secret_key_ecom'] = "Секретный ключ от ECOM";
 $string['rai_api_secret_key_sbr'] = "Секретный ключ от SBP";
 $string['rai_api_url'] = "Адрес подключенного Api";
+$string['rai_sbp_merchant_id'] = "Идентификатор действующего клиента SBP";

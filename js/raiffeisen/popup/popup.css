@@ -1,0 +1,273 @@
+/*
+ * Description actions
+ * @author vshapovalov
+ * @date 31/7/2020
+ * @copyright 2020 Moscow Witte University. All rights reserved.
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package moodle
+ */
+
+/*Popup window*/
+
+.popup_root {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .7);
+    z-index: 100;
+}
+
+.popup_cover {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.popup_wrap-list {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    max-width: 100%;
+    height: 637px;
+    max-height: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrap-list_cross {
+    height: 48px;
+    position: relative;
+}
+
+.cross {
+    right: 17px;
+    top: 50%;
+    color: rgb(102, 102, 102);
+    position: absolute;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-family: "Arial", sans-serif;
+    z-index: 101;
+    transform: translate(0, -50%);
+}
+
+.wrap-list_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#logo{
+    max-width: 340px;
+    max-height: 60px;
+    width: auto;
+    height: auto;
+}
+
+.header-app{
+    margin-top: 20px;
+    width: 100%;
+    border-bottom: 1px solid;
+    border-color: #d6d6d6;
+}
+
+.header-info{
+    max-width: 392px;
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+.pay-selector{
+    max-width: 392px;
+    margin: auto;
+    text-align: left;
+}
+
+.pay-selector label{
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pay-selector input[type="radio"] {
+    visibility:hidden;
+    position: absolute;
+}
+
+.pay-selector .radio-inline{
+    margin: 0;
+    position: relative;
+    padding-bottom: 7px;
+}
+
+.pay-selector .radio-inline:last-child{
+    margin-left: 15px;
+}
+.pay-selector input[type="radio"]:checked + label:after{
+    content: "";
+    width: 100%;
+    height: 3px;
+    background-color: #9A0105;
+    bottom: 0;
+    position: absolute;
+    display: block;
+}
+
+.header-logo{
+    max-width: 340px;
+    max-height: 40px;
+    padding-bottom: 30px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.header-payment-val{
+    font-style: normal;
+    font-family: Helvetica, "Helvetica New", Arial, sans-serif;
+    font-size: 14px;
+    vertical-align: baseline;
+    line-height: 20px;
+    font-weight: bold;
+    font-variant: normal;
+    margin: 0;
+    padding: 0;
+}
+
+.pay-val{
+    font-size: 36px !important;
+    line-height: 40px !important;
+    margin-top: 8px;
+    color: #000000;
+    text-align: left;
+}
+
+.pay-val svg{
+    overflow: hidden !important;
+    vertical-align: inherit !important;
+}
+
+.pay-name-val{
+    display: inline-block;
+    width: 20px;
+    height: 26px;
+}
+
+/*content*/
+
+.content-app{
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px 0 24px;
+    min-height: 300px;
+}
+
+/*footer*/
+
+.footer-app{
+    margin-top: 20px;
+    width: 100%;
+    padding: 20px 0px 24px;
+}
+
+.footer-section{
+    max-width: 392px;
+    margin: auto;
+}
+
+.bottom-icon_section{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.rai-icon_text{
+    display: flex;
+    flex-direction: row;
+}
+
+.rai-icon_text .rai-icon{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+.rai-icon_text .rai-text{
+    margin-left: 8px;
+}
+
+.rai-text .svg-text{
+    display: inline-block;
+    width: 84px;
+    height: 24px;
+}
+
+/*QR-code*/
+
+#qr-code {
+    display: flex;
+    flex-direction: row;
+    max-width: 392px;
+    margin: auto;
+    text-align: left;
+}
+
+.qr-code_image {
+    padding-top: 2px;
+}
+
+.qr-code_image img{
+    width: 200px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.qr-code_desc {
+    padding-left: 20px;
+    display: block;
+    font-family: Helvetica, "Helvetica New", Arial, sans-serif;
+}
+
+.desc-header span {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.desc-header {
+    width: 230px;
+}
+
+.desc-content {
+    width: 175px;
+}
+
+.qr-code_desc ol {
+    font-size: 15px;
+    padding-left: 0;
+    counter-reset: item;
+}
+
+.qr-code_desc li {
+    margin-top: 10px;
+    line-height: 18px;
+}
+
+.qr-code_desc ol li {
+    display: block;
+}
+
+.qr-code_desc ol li:before {
+    content: counter(item) ". ";
+    counter-increment: item;
+    font-weight: bold;
+}

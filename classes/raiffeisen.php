@@ -22,13 +22,7 @@ use student_pay;
  */
 class raiffeisen
 {
-// --Commented out by Inspection START (30.07.2020 17:25):
-//    /**
-//     * @var null
-//     */
-//    private static $instance = null;
-// --Commented out by Inspection STOP (30.07.2020 17:25)
-
+    private static $instance = null;
 
     /**
      * raiffeisen constructor.
@@ -70,10 +64,11 @@ class raiffeisen
      * @param $goods_type
      * @param $order_id
      * @param $qrId
+     * @param $error
      */
-    private function recordNewPay($summ, $goods_type, $order_id, $qrId): void
+    private function recordNewPay($summ, $goods_type, $order_id, $qrId, $error): void
     {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId);
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId, $error);
     }
 
     /**
@@ -115,9 +110,52 @@ class raiffeisen
         return preg_match('/^type[1-2]$/s', $str);
     }
 
-    public function generateQrCode(): string
+    public function generateQrCode($amount, $orderId): array
     {
-        //TODO: write curl generator qr code from api
+        if ($this -> validateNumber($amount) && $this -> validateNumber($orderId)) {
+
+            $config = get_config('local_student_pay');
+
+            $ch = curl_init();
+
+            $params = [
+                "amount" => $amount,
+                "createDate" => date('Y-m-d\TH:i:s.uP'),
+                "currency" => "RUB",
+                "order" => $orderId,
+                "paymentDetails" => "Оплата за обучение",
+                "qrType" => "QRDynamic",
+                "qrExpirationDate" => date('Y-m-d\TH:i:s.uP'),
+                "sbpMerchantId" => $config -> rai_sbp_merchant_id
+            ];
+
+            curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/sbp/v1/qr/register');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+
+            $headers = array();
+            $headers[] = 'Content-Type: application/json';
+            $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_sbr;
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+            $result = json_decode(curl_exec($ch));
+
+            $error = null;
+
+            if (curl_errno($ch)) {
+                $error = 'Error:' . curl_error($ch);
+            }
+            curl_close($ch);
+
+            if ($error ?? null) {
+                throw new Exception("Ошибка при совершении запроса", $error);
+            }
+
+            return get_object_vars($result);
+        } else {
+            throw new Exception("Данные не прошли валидацию");
+        }
     }
 
     /**
@@ -126,11 +164,12 @@ class raiffeisen
      * @param $pay_type
      * @param $order_id
      * @param null $qrId
+     * @param $error
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
-            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId);
+            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId, $error);
         }
     }
 }

@@ -34,7 +34,7 @@ const promiseSendFormData = async (form_data) => {
         body: form_data
     }
 
-    await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
+    return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
 }
 
 export {promiseGetOrderId, promiseSendFormData};
