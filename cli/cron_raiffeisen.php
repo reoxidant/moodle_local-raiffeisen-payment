@@ -111,7 +111,11 @@ class BankSystem
         foreach ($payments as $id => $payment) {
             $user = $this -> getUserByPayment($payment);
             if ($this -> validateFields($payment, $id, $user)) {
-                $this -> connect($id);
+                if($payment -> id_qr_code ?? null){
+                    $this-> checkSbpPay($payment -> id_qr_code, $id);
+                }else{
+                    $this -> checkEcomPay($id);
+                }
             }
         }
     }
@@ -153,11 +157,10 @@ class BankSystem
      * @param $orderId
      * @throws dml_exception
      */
-    public function connect($orderId): void
+    public function checkEcomPay($orderId): void
     {
         $config = get_config('local_student_pay');
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
         curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/payments/v1/orders/' . $orderId . '/transaction');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -203,5 +206,32 @@ class BankSystem
         }
         curl_close($ch);
         return $error;
+    }
+
+    private function checkSbpPay($qrId, $orderId)
+    {
+        $config = get_config('local_student_pay');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_FAILONERROR, true);
+        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url."/api/sbp/v1/qr/".$qrId."/payment-info");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+
+        $headers = array();
+        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_sbp;
+        $headers[] = 'Content-Type: application/json';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = json_decode(curl_exec($ch));
+
+        $errors = $this -> handlerErrors($ch);
+
+        if ($errors === null) {
+            $status = (string)($result -> code);
+            Subsystem ::updateStatusToDB($orderId, $status);
+        } else {
+            $this -> recordErrorsDB($orderId, $errors);
+        }
     }
 }

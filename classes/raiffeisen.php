@@ -64,10 +64,11 @@ class raiffeisen
      * @param $goods_type
      * @param $order_id
      * @param $qrId
+     * @param $error
      */
-    private function recordNewPay($summ, $goods_type, $order_id, $qrId): void
+    private function recordNewPay($summ, $goods_type, $order_id, $qrId, $error): void
     {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId);
+        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId, $error);
     }
 
     /**
@@ -75,17 +76,15 @@ class raiffeisen
      * @param $goods_type
      * @param $pay_type
      * @param $order_id
-     * @param $rai_type_pay
      * @return bool
      */
-    private function validateFormData($summ, $goods_type, $pay_type, $order_id, $rai_type_pay): bool
+    private function validateFormData($summ, $goods_type, $pay_type, $order_id): bool
     {
         if (
             $this -> validateNumber($summ) &&
             $this -> validateNumber($order_id) &&
             $this -> validateTypes($pay_type) &&
-            $this -> validateTypes($goods_type) &&
-            (($rai_type_pay ?? null) ? $this -> validateTypes($rai_type_pay) : true)
+            $this -> validateTypes($goods_type)
         ) {
             return true;
         } else {
@@ -113,8 +112,6 @@ class raiffeisen
 
     public function generateQrCode($amount, $orderId): array
     {
-        //TODO: write curl generator qr code from api
-
         if ($this -> validateNumber($amount) && $this -> validateNumber($orderId)) {
 
             $config = get_config('local_student_pay');
@@ -166,13 +163,13 @@ class raiffeisen
      * @param $goods_type
      * @param $pay_type
      * @param $order_id
-     * @param $rai_type_pay
      * @param null $qrId
+     * @param $error
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id, $rai_type_pay, $qrId): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error): void
     {
-        if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id, $rai_type_pay)) {
-            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId);
+        if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
+            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId, $error);
         }
     }
 }
