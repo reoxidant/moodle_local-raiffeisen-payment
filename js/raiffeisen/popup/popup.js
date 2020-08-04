@@ -136,7 +136,6 @@ const addEcomEventOnClick = (popup) => {
 const closePopup = (popup) => popup.remove();
 
 const showPopup = async (orderId, pay_form, amount) => {
-    console.log(amount, 'amount');
     const popup = getPopupNodeHtml(amount);
 
     insertPopupToPageContainer(popup);
@@ -150,8 +149,6 @@ const showPopup = async (orderId, pay_form, amount) => {
         .then((response) => response.json())
         .then(data => {
             require(['core/notification'], function (Notification) {
-                console.log(data);
-
                 let {code, message} = data;
 
                 if (code === "SUCCESS") {

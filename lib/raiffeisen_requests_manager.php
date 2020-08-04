@@ -29,6 +29,6 @@ if ($_POST ?? null) {
         $error = ($result["qrId"] ?? null) ? null : $result['code'];
         echo json_encode($result);
 
-        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $_POST['rai_type_pay'], $id_qr_code, $error);
+        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $result["qrId"], $error);
     }
 }
