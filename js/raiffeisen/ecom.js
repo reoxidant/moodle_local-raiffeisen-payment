@@ -10,16 +10,14 @@
 // noinspection JSUnresolvedFunction
 import {promiseSendFormData} from "./promise_handler.js";
 
-const ecom = (orderId, pay_form) => {
+const ecom = (orderId, pay_form, amount) => {
     // noinspection JSUnresolvedFunction
     const payment = new PaymentPageSdk('000001780357001-80357001', {url: 'https://test.ecom.raiffeisen.ru/pay'});
-
-    const amount = document.querySelector('#id_summ').value;
 
 // noinspection JSValidateTypes
     require(['core/notification'], function (Notification) {
         // noinspection JSUnresolvedFunction
-        payment.openPopup({
+        payment.openWindow({
             orderId: orderId,
             amount: amount
         }).then(function () {

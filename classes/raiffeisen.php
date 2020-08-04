@@ -114,8 +114,6 @@ class raiffeisen
 
     public function generateQrCode($amount, $orderId): array
     {
-        //TODO: write curl generator qr code from api
-
         if ($this -> validateNumber($amount) && $this -> validateNumber($orderId)) {
 
             $config = get_config('local_student_pay');
