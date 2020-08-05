@@ -26,7 +26,7 @@ if ($_POST ?? null) {
     } else {
         $payment = raiffeisen ::getInstance();
 
-        if($_POST['payment'] === 'sbp'){
+        if ($_POST['payment'] === 'sbp') {
             $result = $payment -> generateQrCode($_POST['summ'], $_POST['orderId']);
             $error = ($result["qrId"] ?? null) ? null : $result['code'];
             echo json_encode($result);

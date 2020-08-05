@@ -122,7 +122,6 @@ const addGeneratedQrCodeToThePopup = (popup, {payload, qrUrl}) => {
         </dvi>`;
 
 
-
     qrCodeElement.setAttribute('id', 'qr-code');
     popup.getElementsByClassName("content-app")[0].appendChild(qrCodeElement);
 }
@@ -172,4 +171,10 @@ const showPopup = async (orderId, pay_form, amount) => {
         })
 }
 
-export {getPopupNodeHtml, insertPopupToPageContainer, addPopupEventOnCloseWindow, addGeneratedQrCodeToThePopup, showPopup};
+export {
+    getPopupNodeHtml,
+    insertPopupToPageContainer,
+    addPopupEventOnCloseWindow,
+    addGeneratedQrCodeToThePopup,
+    showPopup
+};

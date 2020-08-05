@@ -156,7 +156,7 @@ class student_pay
             $record -> bank = $bank_name;
             ($external_order_id ?? null) ? $record -> external_order_id = $external_order_id : null;
             ($id_qr_code ?? null) ? ($record -> id_qr_code = $id_qr_code) : null;
-            if($code_error ?? null){
+            if ($code_error ?? null) {
                 $record -> error = $code_error;
                 $record -> status = 5;
             }

@@ -23,7 +23,7 @@ const ecom = (formData, orderId, amount) => {
             .then(() => {
                 payment.replace({
                     amount: amount,
-                    orderId: ++orderId,
+                    orderId: orderId,
                     extra: {
                         url: 'https://test.ecom.raiffeisen.ru/pay'
                     },

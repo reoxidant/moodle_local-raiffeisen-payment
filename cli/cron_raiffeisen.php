@@ -90,8 +90,10 @@ class Subsystem
     {
         if ($status === "SUCCESS") {
             student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['paid']);
-        } else if ($status === "NOT_FOUND") {
+        } else if ($status === "NO_INFO" || $status === "NOT_FOUND") {
             student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['error']);
+        } else {
+            student_pay :: updateOrderStatus($id, student_pay ::get_status_types()['error']);
         }
     }
 }
@@ -111,9 +113,9 @@ class BankSystem
         foreach ($payments as $id => $payment) {
             $user = $this -> getUserByPayment($payment);
             if ($this -> validateFields($payment, $id, $user)) {
-                if($payment -> id_qr_code ?? null){
-                    $this-> checkSbpPay($payment -> id_qr_code, $id);
-                }else{
+                if ($payment -> id_qr_code ?? null) {
+                    $this -> checkSbpPay($payment -> id_qr_code, $id);
+                } else {
                     $this -> checkEcomPay($id);
                 }
             }
@@ -213,7 +215,7 @@ class BankSystem
         $config = get_config('local_student_pay');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url."/api/sbp/v1/qr/".$qrId."/payment-info");
+        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . "/api/sbp/v1/qr/" . $qrId . "/payment-info");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
@@ -228,7 +230,7 @@ class BankSystem
         $errors = $this -> handlerErrors($ch);
 
         if ($errors === null) {
-            $status = (string)($result -> code);
+            $status = (string)($result -> paymentStatus);
             Subsystem ::updateStatusToDB($orderId, $status);
         } else {
             $this -> recordErrorsDB($orderId, $errors);
