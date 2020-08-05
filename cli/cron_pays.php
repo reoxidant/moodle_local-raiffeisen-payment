@@ -1,5 +1,5 @@
 <?php
-//define('CLI_SCRIPT', true);
+define('CLI_SCRIPT', true);
 require(__DIR__ . '/../../../config.php');
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
 require_once($CFG -> dirroot . "/local/student_pay/cli/cron_raiffeisen.php");

@@ -21,18 +21,22 @@ const ready = () => {
 
             const amount = document.querySelector('#id_summ').value;
 
-            promiseGetOrderId('new').then((orderId) => {
+             promiseGetOrderId("new")
+                .then((response) => response.json())
+                .then(data => {
 
-                if (typeof orderId !== "number" || !orderId) {
-                    throw new Error("Ошибка выполнения запроса!");
-                } else {
-                    orderId++;
-                }
+                    let {orderid} = data;
 
-                showPopup(orderId, pay_form, amount).catch(err => {
-                    throw new Error(err);
+                    if (typeof data !== "number" || !orderid) {
+                        throw new Error("Ошибка выполнения запроса!");
+                    } else {
+                        orderid++;
+                    }
+
+                    showPopup(orderid, pay_form, amount).catch(err => {
+                        throw new Error(err);
+                    });
                 });
-            });
         }
     });
 };

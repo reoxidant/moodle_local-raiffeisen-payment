@@ -17,13 +17,7 @@ const promiseGetOrderId = async (keyName) => {
             body: 'key=' + keyName
         }
 
-        return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam)
-            .then((response) => response.text())
-            .then((responseData) => {
-                return parseInt(responseData, 10);
-            }).catch((error) => {
-                throw error;
-            })
+        return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
     }
 }
 

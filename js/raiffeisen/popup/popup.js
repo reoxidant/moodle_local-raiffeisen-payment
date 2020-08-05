@@ -122,14 +122,13 @@ const addGeneratedQrCodeToThePopup = (popup, {payload, qrUrl}) => {
         </dvi>`;
 
 
-
     qrCodeElement.setAttribute('id', 'qr-code');
     popup.getElementsByClassName("content-app")[0].appendChild(qrCodeElement);
 }
 
-const addEcomEventOnClick = (popup) => {
+const addEcomEventOnClick = (popup, formData, orderId, amount) => {
     popup.querySelector("#card_pay").nextElementSibling.addEventListener('click', () => {
-        ecom();
+        ecom(formData, orderId, amount);
     });
 }
 
@@ -140,10 +139,13 @@ const showPopup = async (orderId, pay_form, amount) => {
 
     insertPopupToPageContainer(popup);
     addPopupEventOnCloseWindow(popup);
-    addEcomEventOnClick(popup);
 
     const formData = new FormData(pay_form);
     formData.append('orderId', `${orderId}`);
+
+    addEcomEventOnClick(popup, formData, orderId, amount);
+
+    formData.append('payment', 'sbp');
 
     await promiseSendFormData(formData)
         .then((response) => response.json())
@@ -169,4 +171,10 @@ const showPopup = async (orderId, pay_form, amount) => {
         })
 }
 
-export {getPopupNodeHtml, insertPopupToPageContainer, addPopupEventOnCloseWindow, addGeneratedQrCodeToThePopup, showPopup};
+export {
+    getPopupNodeHtml,
+    insertPopupToPageContainer,
+    addPopupEventOnCloseWindow,
+    addGeneratedQrCodeToThePopup,
+    showPopup
+};
