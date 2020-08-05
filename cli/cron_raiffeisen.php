@@ -9,8 +9,7 @@
  * @package moodle
  */
 
-/** @noinspection PhpIncludeInspection */
-
+define('CLI_SCRIPT', true);
 require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
 
 /**

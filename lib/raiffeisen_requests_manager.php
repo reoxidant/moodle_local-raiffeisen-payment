@@ -8,6 +8,7 @@
  * @package moodle
  */
 
+defined('MOODLE_INTERNAL') || die;
 require_once('../../../config.php');
 require_once('../classes/raiffeisen.php');
 require_once('../classes/raiffeisen_order.php');
