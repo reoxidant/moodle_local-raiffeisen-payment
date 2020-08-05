@@ -8,17 +8,15 @@
  * @package moodle
  */
 
-defined('MOODLE_INTERNAL') || die;
 require_once('../../../config.php');
 require_once('../classes/raiffeisen.php');
-require_once('../classes/raiffeisen_order.php');
 
 use classes\raiffeisen;
 
 if ($_POST ?? null) {
     if ($_POST['key'] ?? null) {
         if ($_POST['key'] === 'new') {
-            echo json_encode(student_pay :: createNewOrder($_POST['summ'], $_POST['orderId'], 1, "raif"));
+            echo json_encode(student_pay :: createNewOrder($_POST['summ'], $_POST['goods_type'], 1, "raif"));
         } else {
             throw new moodle_exception('Ошибка при получении параметра: orderId');
         }
