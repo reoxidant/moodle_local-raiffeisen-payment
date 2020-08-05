@@ -22,6 +22,9 @@ use student_pay;
  */
 class raiffeisen
 {
+    /**
+     * @var null
+     */
     private static $instance = null;
 
     /**
@@ -62,18 +65,6 @@ class raiffeisen
     /**
      * @param $summ
      * @param $goods_type
-     * @param $order_id
-     * @param $qrId
-     * @param $error
-     */
-    private function recordNewPay($summ, $goods_type, $order_id, $qrId, $error): void
-    {
-        student_pay ::createNewOrder($summ, $goods_type, 1, 'raiff', $order_id, $qrId, $error);
-    }
-
-    /**
-     * @param $summ
-     * @param $goods_type
      * @param $pay_type
      * @param $order_id
      * @return bool
@@ -108,6 +99,18 @@ class raiffeisen
     private function validateTypes($str): bool
     {
         return preg_match('/^type[1-2]$/s', $str);
+    }
+
+    private function createNewClass($external_order_id = null, $id_qr_code = null, $code_error = null)
+    {
+        $pay = new stdClass;
+        ($external_order_id ?? null) ? $pay -> external_order_id = $external_order_id : null;
+        ($id_qr_code ?? null) ? ($pay -> id_qr_code = $id_qr_code) : null;
+        if ($code_error ?? null) {
+            $pay -> error = $code_error;
+            $pay -> status = 5;
+        }
+        return $pay;
     }
 
     public function generateQrCode($amount, $orderId): array
@@ -169,7 +172,8 @@ class raiffeisen
     public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
-            $this -> recordNewPay($summ, $goods_type, $order_id, $qrId, $error);
+            $pay = $this -> createNewClass($order_id, $qrId, $error);
+            student_pay ::updateOrder($pay);
         }
     }
 }

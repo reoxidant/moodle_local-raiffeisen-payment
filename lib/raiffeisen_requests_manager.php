@@ -14,13 +14,11 @@ require_once('../classes/raiffeisen.php');
 require_once('../classes/raiffeisen_order.php');
 
 use classes\raiffeisen;
-use classes\raiffeisen_order;
 
 if ($_POST ?? null) {
     if ($_POST['key'] ?? null) {
         if ($_POST['key'] === 'new') {
-            $order = raiffeisen_order :: getInstance();
-            echo $order -> getOrderId();
+            echo json_encode(student_pay :: createNewOrder($_POST['summ'], $_POST['orderId'], 1, "raif"));
         } else {
             throw new moodle_exception('Ошибка при получении параметра: orderId');
         }
