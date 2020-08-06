@@ -158,6 +158,11 @@
     display: inline-block;
     width: 20px;
     height: 26px;
+    margin-left: 6px;
+}
+
+.pay-name-val img {
+    margin-bottom: 8px;
 }
 
 /*content*/

@@ -13,7 +13,9 @@ namespace classes;
 defined('MOODLE_INTERNAL') || die;
 require_once('../locallib.php');
 
+use dml_exception;
 use Exception;
+use stdClass;
 use student_pay;
 
 /**
@@ -72,8 +74,8 @@ class raiffeisen
     private function validateFormData($summ, $goods_type, $pay_type, $order_id = null): bool
     {
         if (
-            $this -> validateNumber($summ) &&
-            ($order_id) ? $this -> validateNumber($order_id) : true  &&
+        $this -> validateNumber($summ) &&
+        ($order_id) ? $this -> validateNumber($order_id) : true &&
             $this -> validateTypes($pay_type) &&
             $this -> validateTypes($goods_type)
         ) {
@@ -105,11 +107,11 @@ class raiffeisen
      * @param null $orderId
      * @param null $id_qr_code
      * @param null $code_error
-     * @return \stdClass
+     * @return stdClass
      */
     private function createNewClass($orderId = null, $id_qr_code = null, $code_error = null)
     {
-        $pay = new \stdClass();
+        $pay = new stdClass();
         ($orderId ?? null) ? $pay -> orderId = $orderId : null;
         ($id_qr_code ?? null) ? ($pay -> id_qr_code = $id_qr_code) : null;
         if ($code_error ?? null) {
@@ -123,7 +125,7 @@ class raiffeisen
      * @param $amount
      * @param $orderId
      * @return array
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public function generateQrCode($amount, $orderId): array
     {
@@ -186,9 +188,9 @@ class raiffeisen
     public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error, $key = false, $ecom = false): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
-            if($ecom or $key){
+            if ($ecom or $key) {
                 echo json_encode(student_pay :: createNewOrder($summ, $goods_type, $order_id, 1, "raif"));
-            }else{
+            } else {
                 $pay = $this -> createNewClass($order_id, $qrId, $error);
                 student_pay ::updateOrder($pay);
             }

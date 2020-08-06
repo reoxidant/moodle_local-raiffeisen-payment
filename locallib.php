@@ -135,7 +135,7 @@ class student_pay
     }
 
     // основные функции
-    public static function createNewOrder($summ, $goods_type, $order_id = null, $status_id = null, $bank_name = 'sber') : array
+    public static function createNewOrder($summ, $goods_type, $order_id = null, $status_id = null, $bank_name = 'sber'): array
     {
         global $USER, $DB;
 
@@ -165,7 +165,7 @@ class student_pay
     {
         global $DB;
 
-        if($values -> orderId ?? null){
+        if ($values -> orderId ?? null) {
             $values -> id = $values -> orderId;
             $values -> external_order_id = $values -> orderId;
         }
