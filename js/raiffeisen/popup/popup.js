@@ -128,24 +128,23 @@ const addGeneratedQrCodeToThePopup = (popup, {payload, qrUrl}) => {
 
 const addEcomEventOnClick = (popup, formData, orderId, amount) => {
     popup.querySelector("#card_pay").nextElementSibling.addEventListener('click', () => {
+        formData.delete('payment');
         ecom(formData, orderId, amount);
     });
 }
 
 const closePopup = (popup) => popup.remove();
 
-const showPopup = async (orderId, pay_form, amount) => {
+const showPopup = async (orderId, formData, amount) => {
     const popup = getPopupNodeHtml(amount);
 
     insertPopupToPageContainer(popup);
     addPopupEventOnCloseWindow(popup);
 
-    const formData = new FormData(pay_form);
     formData.append('orderId', `${orderId}`);
+    formData.append('payment', 'sbp');
 
     addEcomEventOnClick(popup, formData, orderId, amount);
-
-    formData.append('payment', 'sbp');
 
     await promiseSendFormData(formData)
         .then((response) => response.json())

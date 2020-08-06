@@ -135,7 +135,7 @@ class student_pay
     }
 
     // основные функции
-    public static function createNewOrder($summ, $goods_type, $status_id = null, $bank_name = 'sber')
+    public static function createNewOrder($summ, $goods_type, $order_id = null, $status_id = null, $bank_name = 'sber') : array
     {
         global $USER, $DB;
 
@@ -153,17 +153,22 @@ class student_pay
             $record -> goods_type = $goods_type;
             $record -> status = $new_status_id;
             $record -> bank = $bank_name;
-            //TODO: Figure out why i don't get a number of id order from database
-            $orderid = $DB -> insert_record('student_pays', $record, true);
+            ($order_id) ? $record -> external_order_id = $order_id : null;
+            $orderid = $DB -> insert_record('student_pays', $record, true, false);
         } catch (Exception $e) {
         }
 
-        return array('orderid' => $orderid, 'timecreate' => $timenow);
+        return ['orderid' => $orderid, 'timecreate' => $timenow];
     }
 
     public static function updateOrder($values)
     {
         global $DB;
+
+        if($values -> orderId ?? null){
+            $values -> id = $values -> orderId;
+            $values -> external_order_id = $values -> orderId;
+        }
 
         if (empty($values -> id))
             return false;

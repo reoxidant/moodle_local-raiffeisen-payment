@@ -14,21 +14,18 @@ require_once('../classes/raiffeisen.php');
 use classes\raiffeisen;
 
 if ($_POST ?? null) {
-    if ($_POST['key'] ?? null) {
-        if ($_POST['key'] === 'new') {
-            echo json_encode(student_pay :: createNewOrder($_POST['summ'], $_POST['goods_type'], 1, "raif"));
-        } else {
-            throw new moodle_exception('Ошибка при получении параметра: orderId');
-        }
-    } else {
-        $payment = raiffeisen ::getInstance();
+    $payment = raiffeisen ::getInstance();
 
-        if ($_POST['payment'] === 'sbp') {
-            $result = $payment -> generateQrCode($_POST['summ'], $_POST['orderId']);
-            $error = ($result["qrId"] ?? null) ? null : $result['code'];
-            echo json_encode($result);
-        }
+    $result = null;
 
-        $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $result["qrId"], $error);
+    if ($_POST['payment'] === 'sbp') {
+        $result = $payment -> generateQrCode($_POST['summ'], $_POST['orderId']);
+        $error = ($result["qrId"] ?? null) ? null : $result['code'];
+        echo json_encode($result);
     }
+
+    $key = $_POST['key'] === "new";
+    $ecom = $_POST['payment'] === "ecom";
+
+    $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $result["qrId"], $error, $key, $ecom);
 }

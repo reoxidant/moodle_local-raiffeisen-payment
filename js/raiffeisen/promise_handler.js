@@ -7,14 +7,11 @@
  * @package moodle
  */
 
-const promiseGetOrderId = async (keyName) => {
-    if (keyName !== null && keyName === "new") {
+const promiseGetOrderId = async (formData) => {
+    if (formData.get('key') !== null && formData.get('key') === "new") {
         const requestParam = {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-            },
-            body: 'key=' + keyName
+            body: formData
         }
 
         return await fetch('/local/student_pay/lib/raiffeisen_requests_manager.php', requestParam);
