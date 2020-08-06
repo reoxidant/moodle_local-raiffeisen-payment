@@ -26,7 +26,13 @@ const getPopupNodeHtml = (amount) => {
                                 <div class="header-logo">
                                     <img id="logo" src="https://www.muiv.ru/bitrix/templates/muiv_v3/img/svg/logo_inline.svg" alt="logotype">
                                 </div>
-                               <span type="span" class="header-payment-val"><div class="pay-val">${amount} <span width="20" height="26" class="pay-name-val"><svg viewBox="0 0 20 26" width="100%" height="100%"><path fill="#000" fill-rule="evenodd" d="M.828 12.752h2.988V.8h6.696c1.608 0 2.976.222 4.104.666 1.128.444 2.046 1.032 2.754 1.764a6.659 6.659 0 0 1 1.548 2.556c.324.972.486 1.974.486 3.006a9.07 9.07 0 0 1-.486 2.988 6.57 6.57 0 0 1-1.548 2.484c-.708.72-1.626 1.29-2.754 1.71-1.128.42-2.496.63-4.104.63H8.496v2.736h6.336v3.708H8.496V26h-4.68v-2.952H.828V19.34h2.988v-2.736H.828v-3.852z M10.044 12.752H8.496V4.544h1.548c.648 0 1.254.066 1.818.198.564.132 1.062.36 1.494.684.432.324.768.762 1.008 1.314s.36 1.236.36 2.052c0 .816-.12 1.482-.36 1.998s-.576.918-1.008 1.206c-.432.288-.93.486-1.494.594a9.666 9.666 0 0 1-1.818.162z"></path></svg></span></div></span>         
+                               <span type="span" class="header-payment-val">
+                                   <div class="pay-val">${amount} 
+                                       <span width="20" height="26" class="pay-name-val">
+                                           <img src="images/rai_rub.svg" alt="Rub Raiffeisen">
+                                       </span>
+                                   </div>
+                               </span>         
                             </div>
                             <div class="pay-selector">
                                <input id="qr_pay" type="radio" name="opt_pay" checked>
@@ -128,24 +134,23 @@ const addGeneratedQrCodeToThePopup = (popup, {payload, qrUrl}) => {
 
 const addEcomEventOnClick = (popup, formData, orderId, amount) => {
     popup.querySelector("#card_pay").nextElementSibling.addEventListener('click', () => {
+        formData.delete('payment');
         ecom(formData, orderId, amount);
     });
 }
 
 const closePopup = (popup) => popup.remove();
 
-const showPopup = async (orderId, pay_form, amount) => {
+const showPopup = async (orderId, formData, amount) => {
     const popup = getPopupNodeHtml(amount);
 
     insertPopupToPageContainer(popup);
     addPopupEventOnCloseWindow(popup);
 
-    const formData = new FormData(pay_form);
     formData.append('orderId', `${orderId}`);
+    formData.append('payment', 'sbp');
 
     addEcomEventOnClick(popup, formData, orderId, amount);
-
-    formData.append('payment', 'sbp');
 
     await promiseSendFormData(formData)
         .then((response) => response.json())

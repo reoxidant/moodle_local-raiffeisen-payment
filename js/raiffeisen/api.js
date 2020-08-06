@@ -14,26 +14,28 @@ const ready = () => {
     const pay_form = document.querySelector('.mform');
     const selector = document.querySelector('#id_pay_type');
 
-
     pay_form.addEventListener('submit', function (e) {
         if (selector.options[selector.selectedIndex].value === 'type2') {
             e.preventDefault();
 
             const amount = document.querySelector('#id_summ').value;
 
-             promiseGetOrderId("new")
+            let formData = new FormData(this);
+            formData.append('key', "new");
+
+            promiseGetOrderId(formData)
                 .then((response) => response.json())
                 .then(data => {
 
                     let {orderid} = data;
 
-                    if (typeof data !== "number" || !orderid) {
+                    if (typeof orderid !== "number" || !orderid) {
                         throw new Error("Ошибка выполнения запроса!");
-                    } else {
-                        orderid++;
                     }
 
-                    showPopup(orderid, pay_form, amount).catch(err => {
+                    formData.delete('key');
+
+                    showPopup(orderid, formData, amount).catch(err => {
                         throw new Error(err);
                     });
                 });

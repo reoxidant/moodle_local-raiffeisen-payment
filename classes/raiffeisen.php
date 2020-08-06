@@ -13,7 +13,9 @@ namespace classes;
 defined('MOODLE_INTERNAL') || die;
 require_once('../locallib.php');
 
+use dml_exception;
 use Exception;
+use stdClass;
 use student_pay;
 
 /**
@@ -69,11 +71,11 @@ class raiffeisen
      * @param $order_id
      * @return bool
      */
-    private function validateFormData($summ, $goods_type, $pay_type, $order_id): bool
+    private function validateFormData($summ, $goods_type, $pay_type, $order_id = null): bool
     {
         if (
-            $this -> validateNumber($summ) &&
-            $this -> validateNumber($order_id) &&
+        $this -> validateNumber($summ) &&
+        ($order_id) ? $this -> validateNumber($order_id) : true &&
             $this -> validateTypes($pay_type) &&
             $this -> validateTypes($goods_type)
         ) {
@@ -101,10 +103,16 @@ class raiffeisen
         return preg_match('/^type[1-2]$/s', $str);
     }
 
-    private function createNewClass($external_order_id = null, $id_qr_code = null, $code_error = null)
+    /**
+     * @param null $orderId
+     * @param null $id_qr_code
+     * @param null $code_error
+     * @return stdClass
+     */
+    private function createNewClass($orderId = null, $id_qr_code = null, $code_error = null)
     {
-        $pay = new stdClass;
-        ($external_order_id ?? null) ? $pay -> external_order_id = $external_order_id : null;
+        $pay = new stdClass();
+        ($orderId ?? null) ? $pay -> orderId = $orderId : null;
         ($id_qr_code ?? null) ? ($pay -> id_qr_code = $id_qr_code) : null;
         if ($code_error ?? null) {
             $pay -> error = $code_error;
@@ -113,6 +121,12 @@ class raiffeisen
         return $pay;
     }
 
+    /**
+     * @param $amount
+     * @param $orderId
+     * @return array
+     * @throws dml_exception
+     */
     public function generateQrCode($amount, $orderId): array
     {
         if ($this -> validateNumber($amount) && $this -> validateNumber($orderId)) {
@@ -167,13 +181,19 @@ class raiffeisen
      * @param $pay_type
      * @param $order_id
      * @param null $qrId
+     * @param bool $key
+     * @param bool $ecom
      * @param $error
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error): void
+    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error, $key = false, $ecom = false): void
     {
         if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
-            $pay = $this -> createNewClass($order_id, $qrId, $error);
-            student_pay ::updateOrder($pay);
+            if ($ecom or $key) {
+                echo json_encode(student_pay :: createNewOrder($summ, $goods_type, $order_id, 1, "raif"));
+            } else {
+                $pay = $this -> createNewClass($order_id, $qrId, $error);
+                student_pay ::updateOrder($pay);
+            }
         }
     }
 }
