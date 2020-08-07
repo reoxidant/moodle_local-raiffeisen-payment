@@ -65,14 +65,13 @@ class raiffeisen
     }
 
     /**
-     * @param $summ
-     * @param $goods_type
-     * @param $pay_type
-     * @param $order_id
+     * @param $payData
      * @return bool
      */
-    private function validateFormData($summ, $goods_type, $pay_type, $order_id = null): bool
+    private function validateFormData($payData): bool
     {
+        list('summ' => $summ, 'orderId' => $order_id, 'goods_type' => $goods_type, 'pay_type' => $pay_type) = $payData;
+
         if (
         $this -> validateNumber($summ) &&
         ($order_id) ? $this -> validateNumber($order_id) : true &&
@@ -104,18 +103,18 @@ class raiffeisen
     }
 
     /**
-     * @param null $orderId
-     * @param null $id_qr_code
-     * @param null $code_error
+     * @param $payData
      * @return stdClass
      */
-    private function createNewClass($orderId = null, $id_qr_code = null, $code_error = null)
+    private function createNewClass($payData)
     {
+        list('orderId' => $orderId, 'qr_code_id' => $id_qr_code, 'error_code' => $error_code) = $payData;
+
         $pay = new stdClass();
         ($orderId ?? null) ? $pay -> orderId = $orderId : null;
         ($id_qr_code ?? null) ? ($pay -> id_qr_code = $id_qr_code) : null;
-        if ($code_error ?? null) {
-            $pay -> error = $code_error;
+        if ($error_code ?? null) {
+            $pay -> error = $error_code;
             $pay -> status = 5;
         }
         return $pay;
@@ -176,22 +175,17 @@ class raiffeisen
     }
 
     /**
-     * @param $summ
-     * @param $goods_type
-     * @param $pay_type
-     * @param $order_id
-     * @param null $qrId
-     * @param bool $key
-     * @param bool $ecom
-     * @param $error
+     * @param $payData
      */
-    public function createPay($summ, $goods_type, $pay_type, $order_id, $qrId, $error, $key = false, $ecom = false): void
+    public function createPay($payData): void
     {
-        if ($this -> validateFormData($summ, $goods_type, $pay_type, $order_id)) {
+        list('is_new_pay' => $key, 'is_ecom_pay' => $ecom) = $payData;
+
+        if ($this -> validateFormData($payData)) {
             if ($ecom or $key) {
-                echo json_encode(student_pay :: createNewOrder($summ, $goods_type, $order_id, 1, "raif"));
+                echo json_encode(student_pay :: createNewOrder($payData, 1, "raif"));
             } else {
-                $pay = $this -> createNewClass($order_id, $qrId, $error);
+                $pay = $this -> createNewClass($payData);
                 student_pay ::updateOrder($pay);
             }
         }
