@@ -17,9 +17,10 @@ use classes\raiffeisen;
 $summ = required_param('summ', PARAM_INT);
 $goods_type = required_param('goods_type', PARAM_RAW);
 $pay_type = required_param('goods_type', PARAM_RAW);
-$orderId = required_param('orderId', PARAM_INT);
-$key = required_param('key', PARAM_RAW);
-$payService = required_param('payment', PARAM_RAW);
+
+$orderId = optional_param('orderId', null, PARAM_INT);
+$key = optional_param('key', null, PARAM_RAW);
+$payService = optional_param('payment', null, PARAM_RAW);
 
 if ($_POST ?? null) {
     $payment = raiffeisen ::getInstance();
