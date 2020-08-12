@@ -58,10 +58,10 @@ class raiffeisen
      */
     public static function getInstance(): raiffeisen
     {
-        if (self ::$instance === null) {
-            self ::$instance = new self();
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
-        return self ::$instance;
+        return self::$instance;
     }
 
     /**
@@ -73,10 +73,10 @@ class raiffeisen
         list('summ' => $summ, 'orderId' => $order_id, 'goods_type' => $goods_type, 'pay_type' => $pay_type) = $payData;
 
         if (
-        $this -> validateNumber($summ) &&
-        ($order_id) ? $this -> validateNumber($order_id) : true &&
-            $this -> validateTypes($pay_type) &&
-            $this -> validateTypes($goods_type)
+        $this->validateNumber($summ) &&
+        ($order_id) ? $this->validateNumber($order_id) : true &&
+            $this->validateTypes($pay_type) &&
+            $this->validateTypes($goods_type)
         ) {
             return true;
         } else {
@@ -111,11 +111,11 @@ class raiffeisen
         list('orderId' => $orderId, 'qr_code_id' => $id_qr_code, 'error_code' => $error_code) = $payData;
 
         $pay = new stdClass();
-        ($orderId ?? null) ? $pay -> orderId = $orderId : null;
-        ($id_qr_code ?? null) ? ($pay -> id_qr_code = $id_qr_code) : null;
+        ($orderId ?? null) ? $pay->orderId = $orderId : null;
+        ($id_qr_code ?? null) ? ($pay->id_qr_code = $id_qr_code) : null;
         if ($error_code ?? null) {
-            $pay -> error = $error_code;
-            $pay -> status = 5;
+            $pay->error = $error_code;
+            $pay->status = 5;
         }
         return $pay;
     }
@@ -128,47 +128,50 @@ class raiffeisen
      */
     public function generateQrCode($amount, $orderId): array
     {
-        if ($this -> validateNumber($amount) && $this -> validateNumber($orderId)) {
+        if ($this->validateNumber($amount) && $this->validateNumber($orderId)) {
+            try {
+                $config = get_config('local_student_pay');
+                $ch = curl_init();
+                $params = [
+                    "amount" => $amount,
+                    "createDate" => date('Y-m-d\TH:i:s.uP'),
+                    "currency" => "RUB",
+                    "order" => $orderId,
+                    "paymentDetails" => "Оплата за обучение",
+                    "qrType" => "QRDynamic",
+                    "qrExpirationDate" => date('Y-m-d\TH:i:s.uP'),
+                    "sbpMerchantId" => $config->rai_sbp_merchant_id
+                ];
 
-            $config = get_config('local_student_pay');
+                curl_setopt($ch, CURLOPT_URL, $config->rai_api_url . '/api/sbp/v1/qr/register');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
 
-            $ch = curl_init();
+                $headers = array();
+                $headers[] = 'Content-Type: application/json';
+                $headers[] = 'Authorization: Bearer ' . $config->rai_api_secret_key_sbr;
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-            $params = [
-                "amount" => $amount,
-                "createDate" => date('Y-m-d\TH:i:s.uP'),
-                "currency" => "RUB",
-                "order" => $orderId,
-                "paymentDetails" => "Оплата за обучение",
-                "qrType" => "QRDynamic",
-                "qrExpirationDate" => date('Y-m-d\TH:i:s.uP'),
-                "sbpMerchantId" => $config -> rai_sbp_merchant_id
-            ];
+                $result = json_decode(curl_exec($ch));
 
-            curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/sbp/v1/qr/register');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+                if ($result === false) {
+                    $curl_error = curl_error($ch);
+                    curl_close($ch);
 
-            $headers = array();
-            $headers[] = 'Content-Type: application/json';
-            $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_sbr;
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                    if (isset($curl_error))
+                        throw new Exception("Ошибка curl: ", $curl_error);
+                    else
+                        throw new Exception("Ошибка при совершении запроса", $curl_error);
+                }
 
-            $result = json_decode(curl_exec($ch));
+                curl_close($ch);
 
-            $error = null;
+                return get_object_vars($result);
 
-            if (curl_errno($ch)) {
-                $error = 'Error:' . curl_error($ch);
+            } catch (Exception $error) {
+                throw new Exception("Извините, возникла ошибка, попробуйте позже", $error);
             }
-            curl_close($ch);
-
-            if ($error ?? null) {
-                throw new Exception("Ошибка при совершении запроса", $error);
-            }
-
-            return get_object_vars($result);
         } else {
             throw new Exception("Данные не прошли валидацию");
         }
@@ -181,12 +184,12 @@ class raiffeisen
     {
         list('is_new_pay' => $key, 'is_ecom_pay' => $ecom) = $payData;
 
-        if ($this -> validateFormData($payData)) {
+        if ($this->validateFormData($payData)) {
             if ($ecom or $key) {
-                echo json_encode(student_pay :: createNewOrder($payData, 1, "raif"));
+                echo json_encode(student_pay:: createNewOrder($payData, 1, "raif"));
             } else {
-                $pay = $this -> createNewClass($payData);
-                student_pay ::updateOrder($pay);
+                $pay = $this->createNewClass($payData);
+                student_pay::updateOrder($pay);
             }
         }
     }
