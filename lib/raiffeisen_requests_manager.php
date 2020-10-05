@@ -8,24 +8,41 @@
  * @package moodle
  */
 
+defined('MOODLE_INTERNAL') || die();
 require_once('../../../config.php');
 require_once('../classes/raiffeisen.php');
 
 use classes\raiffeisen;
+
+$summ = required_param('summ', PARAM_INT);
+$goods_type = required_param('goods_type', PARAM_RAW);
+$pay_type = required_param('goods_type', PARAM_RAW);
+
+$orderId = optional_param('orderId', null, PARAM_INT);
+$key = optional_param('key', null, PARAM_RAW);
+$payService = optional_param('payment', null, PARAM_RAW);
 
 if ($_POST ?? null) {
     $payment = raiffeisen ::getInstance();
 
     $result = null;
 
-    if ($_POST['payment'] === 'sbp') {
+    if ($payService === 'sbp') {
         $result = $payment -> generateQrCode($_POST['summ'], $_POST['orderId']);
         $error = ($result["qrId"] ?? null) ? null : $result['code'];
         echo json_encode($result);
     }
 
-    $key = $_POST['key'] === "new";
-    $ecom = $_POST['payment'] === "ecom";
+    $payData = [
+        'summ' => $summ,
+        'goods_type' => $goods_type,
+        'pay_type' => $pay_type,
+        'orderId' => $orderId,
+        'qr_code_id' => $result["qrId"],
+        'error_code' => $error,
+        'is_new_pay' => $key === "new",
+        'is_ecom_pay' => $payService === "ecom"
+    ];
 
-    $payment -> createPay($_POST['summ'], $_POST['goods_type'], $_POST['pay_type'], $_POST['orderId'], $result["qrId"], $error, $key, $ecom);
+    $payment -> createPay($payData);
 }

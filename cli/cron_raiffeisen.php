@@ -10,7 +10,7 @@
  */
 
 define('CLI_SCRIPT', true);
-require_once($CFG -> dirroot . "/local/student_pay/locallib.php");
+require_once($CFG->dirroot . "/local/student_pay/locallib.php");
 
 /**
  * Class cron_raiffeisen
@@ -36,8 +36,8 @@ class cron_raiffeisen
         Banksystem $bank = null
     )
     {
-        $this -> subsystem = $subsystem ?: new Subsystem();
-        $this -> bank = $bank ?: new BankSystem();
+        $this->subsystem = $subsystem ?: new Subsystem();
+        $this->bank = $bank ?: new BankSystem();
     }
 
     /**
@@ -46,11 +46,11 @@ class cron_raiffeisen
     public function checkStatusOperations(): void
     {
         //Facade subsystem initializes
-        $this -> subsystem -> setStatusTypes();
-        $payments = $this -> subsystem -> getPayments();
+        $this->subsystem->setStatusTypes();
+        $payments = $this->subsystem->getPayments();
         //Facade bank initializes
-        $this -> bank -> status_arr;
-        $this -> bank -> handlerStatusByPayments($payments);
+        $this->bank->status_arr;
+        $this->bank->handlerStatusByPayments($payments);
     }
 }
 
@@ -69,7 +69,7 @@ class Subsystem
      */
     public function setStatusTypes(): void
     {
-        $this -> status_arr = student_pay ::get_status_types();
+        $this->status_arr = student_pay::get_status_types();
     }
 
     /**
@@ -77,8 +77,8 @@ class Subsystem
      */
     public function getPayments(): array
     {
-        $status_arr = array($this -> status_arr['new'], $this -> status_arr['paid']);
-        return student_pay ::getOrdersByStatus($status_arr);
+        $status_arr = array($this->status_arr['new'], $this->status_arr['paid']);
+        return student_pay::getOrdersByStatus($status_arr);
     }
 
     /**
@@ -88,11 +88,11 @@ class Subsystem
     public static function updateStatusToDB($id, $status): void
     {
         if ($status === "SUCCESS") {
-            student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['paid']);
+            student_pay::updateOrderStatus($id, student_pay::get_status_types()['paid']);
         } else if ($status === "NO_INFO" || $status === "NOT_FOUND") {
-            student_pay ::updateOrderStatus($id, student_pay ::get_status_types()['error']);
+            student_pay::updateOrderStatus($id, student_pay::get_status_types()['error']);
         } else {
-            student_pay :: updateOrderStatus($id, student_pay ::get_status_types()['error']);
+            student_pay:: updateOrderStatus($id, student_pay::get_status_types()['error']);
         }
     }
 }
@@ -110,12 +110,12 @@ class BankSystem
     public function handlerStatusByPayments($payments): void
     {
         foreach ($payments as $id => $payment) {
-            $user = $this -> getUserByPayment($payment);
-            if ($this -> validateFields($payment, $id, $user)) {
-                if ($payment -> id_qr_code ?? null) {
-                    $this -> checkSbpPay($payment -> id_qr_code, $id);
+            $user = $this->getUserByPayment($payment);
+            if ($this->validateFields($payment, $id, $user)) {
+                if ($payment->id_qr_code ?? null) {
+                    $this->checkSbpPay($payment->id_qr_code, $id);
                 } else {
-                    $this -> checkEcomPay($id);
+                    $this->checkEcomPay($id);
                 }
             }
         }
@@ -130,8 +130,8 @@ class BankSystem
      */
     private function validateFields($val_pay, $id, $user): bool
     {
-        if (($id && $val_pay -> amount && $val_pay -> external_order_id) ?? null) {
-            if ($user -> username ?? null && $val_pay -> status == student_pay ::get_status_types()['new'])
+        if (($id && $val_pay->amount && $val_pay->external_order_id) ?? null) {
+            if ($user->username ?? null && $val_pay->status == student_pay::get_status_types()['new'])
                 return true;
         }
 
@@ -148,7 +148,7 @@ class BankSystem
         $result = null;
         try {
             /** @var object $result */
-            $result = $DB -> get_record('user', array('id' => $val -> userid), 'username');
+            $result = $DB->get_record('user', array('id' => $val->userid), 'username');
         } catch (dml_exception $e) {
         }
         return $result;
@@ -160,26 +160,35 @@ class BankSystem
      */
     public function checkEcomPay($orderId): void
     {
-        $config = get_config('local_student_pay');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . '/api/payments/v1/orders/' . $orderId . '/transaction');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        $headers = array();
-        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_ecom;
-        $headers[] = 'Content-Type: application/json';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        try {
+            $config = get_config('local_student_pay');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_FAILONERROR, true);
+            curl_setopt($ch, CURLOPT_URL, $config->rai_api_url . '/api/payments/v1/orders/' . $orderId . '/transaction');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            $headers = array();
+            $headers[] = 'Authorization: Bearer ' . $config->rai_api_secret_key_ecom;
+            $headers[] = 'Content-Type: application/json';
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        $result = json_decode(curl_exec($ch));
+            $result = json_decode(curl_exec($ch));
 
-        $errors = $this -> handlerErrors($ch);
+            if ($result === false) {
+                $curl_error = $this->handlerErrors($ch);
 
-        if ($errors === null) {
-            $status = (string)($result -> transaction -> status -> value);
-            Subsystem ::updateStatusToDB($orderId, $status);
-        } else {
-            $this -> recordErrorsDB($orderId, $errors);
+                if (isset($curl_error)) {
+                    $this->recordErrorsDB($orderId, $curl_error);
+                    throw new Exception("Ошибка curl: ", $curl_error);
+                } else
+                    throw new Exception("Ошибка при совершении запроса", $curl_error);
+            } else {
+                $status = (string)($result->transaction->status->value);
+                Subsystem::updateStatusToDB($orderId, $status);
+            }
+            curl_close($ch);
+        } catch (Exception $error) {
+            throw new Exception("Извините, возникла ошибка, попробуйте позже", $error);
         }
     }
 
@@ -190,9 +199,9 @@ class BankSystem
     private function recordErrorsDB($id, $msg)
     {
         $error = new stdClass;
-        $error -> id = $id;
-        $error -> error = $msg;
-        student_pay ::updateOrder($error);
+        $error->id = $id;
+        $error->error = $msg;
+        student_pay::updateOrder($error);
     }
 
     /**
@@ -211,28 +220,36 @@ class BankSystem
 
     private function checkSbpPay($qrId, $orderId)
     {
-        $config = get_config('local_student_pay');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_FAILONERROR, true);
-        curl_setopt($ch, CURLOPT_URL, $config -> rai_api_url . "/api/sbp/v1/qr/" . $qrId . "/payment-info");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        try {
+            $config = get_config('local_student_pay');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_FAILONERROR, true);
+            curl_setopt($ch, CURLOPT_URL, $config->rai_api_url . "/api/sbp/v1/qr/" . $qrId . "/payment-info");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
+            $headers = array();
+            $headers[] = 'Authorization: Bearer ' . $config->rai_api_secret_key_sbp;
+            $headers[] = 'Content-Type: application/json';
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-        $headers = array();
-        $headers[] = 'Authorization: Bearer ' . $config -> rai_api_secret_key_sbp;
-        $headers[] = 'Content-Type: application/json';
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $result = json_decode(curl_exec($ch));
 
-        $result = json_decode(curl_exec($ch));
+            if ($result === false) {
+                $curl_error = $this->handlerErrors($ch);
 
-        $errors = $this -> handlerErrors($ch);
-
-        if ($errors === null) {
-            $status = (string)($result -> paymentStatus);
-            Subsystem ::updateStatusToDB($orderId, $status);
-        } else {
-            $this -> recordErrorsDB($orderId, $errors);
+                if (isset($curl_error)) {
+                    $this->recordErrorsDB($orderId, $curl_error);
+                    throw new Exception("Ошибка curl: ", $curl_error);
+                } else
+                    throw new Exception("Ошибка при совершении запроса", $curl_error);
+            } else {
+                $status = (string)($result->paymentStatus);
+                Subsystem::updateStatusToDB($orderId, $status);
+            }
+            curl_close($ch);
+        } catch (Exception $error) {
+            throw new Exception("Извините, возникла ошибка, попробуйте позже", $error);
         }
     }
 }
