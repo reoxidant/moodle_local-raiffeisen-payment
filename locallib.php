@@ -135,11 +135,13 @@ class student_pay
     }
 
     // основные функции
-    public static function createNewOrder($summ, $goods_type, $order_id = null, $status_id = null, $bank_name = 'sber'): array
+    public static function createNewOrder($payData, $status_id = null, $bank_name = 'sber'): array
     {
         global $USER, $DB;
 
         $new_status_id = ($status_id) ? $status_id : self :: $config -> status_new;
+
+        list('summ' => $summ, 'goods_type' => $goods_type, 'orderId' => $order_id) = $payData;
 
         $timenow = time();
 
