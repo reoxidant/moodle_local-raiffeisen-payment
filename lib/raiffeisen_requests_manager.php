@@ -8,7 +8,7 @@
  * @package moodle
  */
 
-defined('MOODLE_INTERNAL') || die();
+//defined('MOODLE_INTERNAL') || die(); //del if use debug mode
 require_once('../../../config.php');
 require_once('../classes/raiffeisen.php');
 
@@ -38,7 +38,7 @@ if ($_POST ?? null) {
         'goods_type' => $goods_type,
         'pay_type' => $pay_type,
         'orderId' => $orderId,
-        'qr_code_id' => $result["qrId"],
+        'qr_code_id' => $result["qrId"] ?? null,
         'error_code' => $error,
         'is_new_pay' => $key === "new",
         'is_ecom_pay' => $payService === "ecom"

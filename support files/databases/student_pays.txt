@@ -1,0 +1,25 @@
+CREATE TABLE public.mdl_student_pays
+(
+    id bigint NOT NULL DEFAULT nextval('mdl_student_pays_id_seq'::regclass),
+    userid bigint NOT NULL,
+    timecreate bigint NOT NULL DEFAULT 0,
+    timemodified bigint NOT NULL DEFAULT 0,
+    amount integer NOT NULL DEFAULT 0,
+    id_qr_code character varying(255) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
+    error character varying(255) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
+    pay_url character varying(500) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
+    status smallint NOT NULL DEFAULT 0,
+    xid bigint NOT NULL DEFAULT 0,
+    external_date bigint NOT NULL DEFAULT 0,
+    goods_type character varying(255) COLLATE pg_catalog."default" DEFAULT ''::character varying,
+    bank character varying(255) COLLATE pg_catalog."default" NOT NULL DEFAULT ''::character varying,
+    external_order_id character varying(255) COLLATE pg_catalog."default" DEFAULT ''::character varying,
+    CONSTRAINT mdl_student_pays_id_pk PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.mdl_student_pays
+    OWNER to esodbuser;
+
+GRANT ALL ON TABLE public.mdl_student_pays TO esodbuser;

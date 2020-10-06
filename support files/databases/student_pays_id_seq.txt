@@ -1,0 +1,11 @@
+CREATE SEQUENCE public.mdl_student_pays_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.mdl_student_pays_id_seq
+    OWNER TO esodbuser;
+
+GRANT ALL ON SEQUENCE public.mdl_student_pays_id_seq TO esodbuser;
