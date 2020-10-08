@@ -18,7 +18,7 @@ try {
         "order" => 99,
         "paymentDetails" => "Оплата за обучение",
         "qrType" => "QRDynamic",
-        "qrExpirationDate" => date('Y-m-d\TH:i:s.uP'),
+        "qrExpirationDate" => date('Y-m-d\TH:i:s.uP', time() + 900),
         "sbpMerchantId" => $config["rai_sbp_merchant_id"]
     ];
 

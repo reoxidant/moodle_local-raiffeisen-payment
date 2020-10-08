@@ -139,7 +139,7 @@ class raiffeisen
                     "order" => $orderId,
                     "paymentDetails" => "Оплата за обучение",
                     "qrType" => "QRDynamic",
-                    "qrExpirationDate" => date('Y-m-d\TH:i:s.uP'),
+                    "qrExpirationDate" => date('Y-m-d\TH:i:s.uP', time() + 900), // + 15 min from currect time
                     "sbpMerchantId" => $config->rai_sbp_merchant_id
                 ];
 
